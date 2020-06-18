@@ -39,7 +39,7 @@ CREATE TABLE `hum_20_admin` (
 --
 
 INSERT INTO `hum_20_admin` (`login`, `pass`) VALUES
-('admin', 'd9ebab8fef2a18746fad4d5ebb0d2efe39ba67c5');
+('admin', 'd033e22ae348aeb5660fc2140aec35850c4da997');
 
 -- --------------------------------------------------------
 
