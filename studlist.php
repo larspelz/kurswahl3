@@ -6,17 +6,18 @@ if (!$isadmin) {
 	header( 'Location: index.php' );
 }
 
-include 'dbconnect.inc.php';
+include 'dbinterface.inc.php';
+DB::connect();
 include 'getconfig.inc.php';
 $tpref=gettableprefix();
 
 // delete a student?
 if (isset($_GET['del'])) {
 	$dnum=$_GET['del'];
-	mysql_query('DELETE FROM '.$tpref.'waehlt WHERE snr='.$dnum);
-	mysql_query('DELETE FROM '.$tpref.'waehltpf WHERE snr='.$dnum);
-	mysql_query('DELETE FROM '.$tpref.'waehltsp WHERE snr='.$dnum);
-	mysql_query('DELETE FROM '.$tpref.'schueler WHERE snr='.$dnum);
+	DB::query('DELETE FROM '.$tpref.'waehlt WHERE snr='.$dnum);
+	DB::query('DELETE FROM '.$tpref.'waehltpf WHERE snr='.$dnum);
+	DB::query('DELETE FROM '.$tpref.'waehltsp WHERE snr='.$dnum);
+	DB::query('DELETE FROM '.$tpref.'schueler WHERE snr='.$dnum);
 }
 
 include 'header.inc.php';
@@ -39,7 +40,7 @@ $errsel='';
 if (isset($_GET['errsel'])) {
 	$errsel=$_GET['errsel'];
 	echo '<th class="admin">Fehler<br>nur '.$errsel.', <a href="studlist.php">reset</a></th></tr>';
-	$errsel=" WHERE kwfehler LIKE '%".mysql_real_escape_string($_GET['errsel'])."%' ";
+	$errsel=" WHERE kwfehler LIKE '%".DB::esc($_GET['errsel'])."%' ";
 } else {
 	echo '<th class="admin">Fehler</th></tr>';
 }

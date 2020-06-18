@@ -2,22 +2,24 @@
 
 	session_start();
 
+	include 'dbinterface.inc.php';
+	DB::connect();
+
    if ($_POST) {
-	  include 'dbconnect.inc.php';
-	  $uid=mysql_real_escape_string ($_POST['uid']);
-	  $pwd=mysql_real_escape_string ($_POST['pwd']);
-	  $pwd=sha1($pwd);
+	  $uid=DB::esc ($_POST['uid']);
+	  $pwd=DB::esc ($_POST['pwd']);
+	  $pwd=hash("sha256", $pwd);
 	  
-	  $school=mysql_real_escape_string ($_POST['school']);
-	  $year=mysql_real_escape_string ($_POST['year']);
+	  $school=DB::esc ($_POST['school']);
+	  $year=DB::esc ($_POST['year']);
 	  if ($school!="") {
-		$res=mysql_query("SELECT schulnr FROM kurswahl_schule WHERE schulnr='$school'");
-		if (mysql_num_rows($res)!=1) unset($school);
+		$res=DB::get_value("SELECT schulnr FROM kurswahl_schule WHERE schulnr='$school'");
+		if (count($res)!=1) unset($school);
 	  }
 	  
 	  if ($year!="" && (isset($school))) {
-		$res=mysql_query("SELECT jahr FROM kurswahl_jahrgang WHERE jahr=$year AND schulnr='$school'");
-		if (mysql_num_rows($res)!=1)
+		$res=DB::get_value("SELECT jahr FROM kurswahl_jahrgang WHERE jahr=$year AND schulnr='$school'");
+		if (count($res)!=1)
 			unset ($year);
 		else {
 			$_SESSION['year']=$year;
@@ -27,15 +29,14 @@
 		}
 	  }
 
-	  if (($uid!="") && ($pwd!=sha1("")) && (isset($school)) && (isset($year))) {
+	  if (($uid!="") && ($pwd!=hash("sha256", "")) && (isset($school)) && (isset($year))) {
 		 if (ctype_digit($uid)) {
 			// es wurde eine Zahl eingegeben: Benutzer ist Schüler
 			$sel='SELECT snr FROM '.$tpref."schueler WHERE snr=$uid AND pw='$pwd'";
 			//echo $sel;
-			$res=mysql_query ($sel);
-			if ($res) {
-				$log=mysql_fetch_row($res);
-				if ($log[0]==$uid) {
+			$res=DB::get_value($sel);
+			if (count($res)==1) {
+				if ($res==$uid) {
 					$_SESSION['user']=$uid;
 					if (isset($_SESSION['logfail'])) unset ($_SESSION['logfail']);
 					header ('Location: motd.php');
@@ -50,10 +51,9 @@
 		 } else {
 		 
 		    // $uid ist String => Benutzer ist admin?
-			$res=mysql_query ('SELECT login FROM '.$tpref."admin WHERE login='$uid' AND pass='$pwd'");
-			if ($res) {
-			    $log=mysql_fetch_row($res);
-			    if ($log[0]==$uid) {
+			$res=DB::get_value('SELECT login FROM '.$tpref."admin WHERE login='$uid' AND pass='$pwd'");
+			if (count($res)==1) {
+			    if ($res==$uid) {
 					$_SESSION['admin']=$uid;
 					header ('Location: studlist.php');
 					exit();

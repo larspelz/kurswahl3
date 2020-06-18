@@ -1,7 +1,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <?php 
-include 'dbconnect.inc.php';
+
 include 'getconfig.inc.php'; ?>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
@@ -10,9 +10,8 @@ include 'getconfig.inc.php'; ?>
 <title>Kurswahl
 <?php 
 	if ((isset($_SESSION['user'])||isset($_SESSION['admin'])) && !isset ($_SESSION['logfail'])) {
-		$res=mysql_query("SELECT name FROM kurswahl_schule WHERE schulnr='".$_SESSION['school']."'");
-		if ($res) $name=mysql_fetch_assoc($res);
-		$schoolname=$name['name'];
+		$res=DB::get_value("SELECT name FROM kurswahl_schule WHERE schulnr='".$_SESSION['school']."'");
+		if (count($res)==1) $schoolname=$res; else $schoolname='Online';
 	} else
 		$schoolname='Online';
 	echo $schoolname;
@@ -53,16 +52,14 @@ include 'getconfig.inc.php'; ?>
 		echo '<script type="text/javascript">';
 		$tpref=gettableprefix();
 		$sql='SELECT ord FROM '.$tpref.'fach WHERE kannGK=1 ORDER BY ord';
-		$res=mysql_query ($sql);
-    	while ($data=mysql_fetch_row($res)) $dt[]=$data[0];
+		$dt=DB::get_list($sql);
 		echo 'fach=new Array(';
     	for ($i=0;$i<count($dt)-1;$i++) {
     		echo '"'.$dt[$i].'",';
     	}
     	echo '"'.$dt[count($dt)-1].'");';
     	// Nachschauen, ob schon eine gespeicherte Kurswahl existiert (kwfehler>0)
-    	$res=mysql_query ('SELECT kwfehler FROM '.$tpref.'schueler WHERE snr='.$uid);
-    	$kwf=mysql_fetch_row($res);
+    	$kwf=DB::get_value('SELECT kwfehler FROM '.$tpref.'schueler WHERE snr='.$uid);
     	if ($kwf>0) echo 'saved=true;';
     	echo '</script>';
     }

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Erstellungszeit: 18. Jun 2020 um 15:01
+-- Erstellungszeit: 18. Jun 2020 um 15:30
 -- Server-Version: 10.4.13-MariaDB
 -- PHP-Version: 7.4.7
 
@@ -31,7 +31,7 @@ CREATE DATABASE `kurswahl`;
 
 CREATE TABLE `hum_20_admin` (
   `login` varchar(40) NOT NULL,
-  `pass` varchar(40) NOT NULL
+  `pass` varchar(64) NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 --
@@ -39,7 +39,7 @@ CREATE TABLE `hum_20_admin` (
 --
 
 INSERT INTO `hum_20_admin` (`login`, `pass`) VALUES
-('admin', 'd033e22ae348aeb5660fc2140aec35850c4da997');
+('admin', '8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918');
 
 -- --------------------------------------------------------
 
@@ -138,12 +138,12 @@ CREATE TABLE `hum_20_schueler` (
   `snr` int(11) NOT NULL,
   `name` varchar(100) NOT NULL,
   `vorname` varchar(100) NOT NULL,
-  `pw` char(40) NOT NULL,
+  `pw` char(64) NOT NULL,
   `prof1` varchar(5) NOT NULL,
   `prof2` varchar(5) NOT NULL,
   `klasse` varchar(3) NOT NULL,
   `kwfehler` varchar(200) NOT NULL,
-  `realpw` varchar(30) NOT NULL,
+  `realpw` varchar(64) NOT NULL,
   `mail` varchar(300) NOT NULL DEFAULT '',
   `kursadd` int(11) NOT NULL DEFAULT 0
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
