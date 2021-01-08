@@ -62,3 +62,16 @@ body { font-family:sans-serif; }
 #mu li a:hover {
 	background-color: #6090F0;
 }
+
+.button {
+  background-color: #CECECE;
+  border: none;
+  border-radius: 4px;
+  color: black;
+  padding: 8px 12px;
+  margin: 4px 0px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+}
