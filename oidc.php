@@ -3,13 +3,13 @@ require __DIR__ . '/vendor/autoload.php';
 
 use Jumbojett\OpenIDConnectClient;
 
-$oidc = new OpenIDConnectClient('https://humboldtschule-berlin.eu',
-                                '99_3sy0fbelfy684cck4k4csw8cokkwgg4s84k8s0w8wkc8o4sw4w',
-                                '3vdov2ptuuyocw0o044wg004ww8owo88w4cwsss0swscwkow8o');
+include 'config.oidc.php';
+
+$oidc = new OpenIDConnectClient(OIDCConfig::$host,OIDCConfig::$clientid,OIDCConfig::$secret);
 
 $oidc->setResponseTypes(array('code'));
-$oidc->providerConfigParam(array('auth_endpoint'=>'https://humboldtschule-berlin.eu/iserv/oauth/v2/auth','token_endpoint'=>'https://humboldtschule-berlin.eu/iserv/oauth/v2/token','userinfo_endpoint'=>'https://humboldtschule-berlin.eu/iserv/public/oauth/userinfo'));
-$oidc->setRedirectURL('https://wolke7.spdns.org/kurswahl3/oidc.php');
+$oidc->providerConfigParam(array('auth_endpoint'=>OIDCConfig::$auth_endpoint,'token_endpoint'=>OIDCConfig::$token_endpoint,'userinfo_endpoint'=>OIDCConfig::$uinfo_endpoint));
+$oidc->setRedirectURL(OIDCConfig::$redirect);
 $oidc->addAuthParam(array('response_mode' => 'form_post'));
 $oidc->addScope('profile groups');
 

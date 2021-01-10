@@ -1,0 +1,15 @@
+<?php
+
+class OIDCConfig {
+
+	static $host='';
+	static $clientid='';
+	static $secret='';
+	static $auth_endpoint='';
+	static $token_endpoint='';
+	static $uinfo_endpoint='';
+	static $redirect='';
+	
+} 
+
+?>
