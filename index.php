@@ -13,20 +13,20 @@
 	  $school=DB::esc ($_POST['school']);
 	  $year=DB::esc ($_POST['year']);
 	  if ($school!="") {
-		$res=DB::get_value("SELECT schulnr FROM kurswahl_schule WHERE schulnr='$school'");
-		if (count($res)!=1) unset($school);
+			$res=DB::check("SELECT schulnr FROM kurswahl_schule WHERE schulnr='$school'");
+			if (!$res) unset($school);
 	  }
 	  
 	  if ($year!="" && (isset($school))) {
-		$res=DB::get_value("SELECT jahr FROM kurswahl_jahrgang WHERE jahr=$year AND schulnr='$school'");
-		if (count($res)!=1)
-			unset ($year);
-		else {
-			$_SESSION['year']=$year;
-			$_SESSION['school']=$school;
-			include 'getconfig.inc.php';
-			$tpref=gettableprefix();
-		}
+			$res=DB::check("SELECT jahr FROM kurswahl_jahrgang WHERE jahr=$year AND schulnr='$school'");
+			if ($res)
+				unset ($year);
+			else {
+				$_SESSION['year']=$year;
+				$_SESSION['school']=$school;
+				include 'getconfig.inc.php';
+				$tpref=gettableprefix();
+			}
 	  }
 
 	  if (($uid!="") && ($pwd!=hash("sha256", "")) && (isset($school)) && (isset($year))) {
@@ -34,32 +34,24 @@
 			// es wurde eine Zahl eingegeben: Benutzer ist Schüler
 			$sel='SELECT snr FROM '.$tpref."schueler WHERE snr=$uid AND pw='$pwd'";
 			//echo $sel;
-			$res=DB::get_value($sel);
-			if (count($res)==1) {
-				if ($res==$uid) {
-					$_SESSION['user']=$uid;
-					if (isset($_SESSION['logfail'])) unset ($_SESSION['logfail']);
-					header ('Location: motd.php');
-					exit();
-				} else {
-					$_SESSION['logfail']='-';
-				}
+			$res=DB::get_value_or_false($sel);
+			if ($res==$uid) {
+				$_SESSION['user']=$uid;
+				if (isset($_SESSION['logfail'])) unset ($_SESSION['logfail']);
+				header ('Location: motd.php');
+				exit();
 			} else {
 				$_SESSION['logfail']='-';
-			}
+			} 
 			
 		 } else {
 		 
 		    // $uid ist String => Benutzer ist admin?
-			$res=DB::get_value('SELECT login FROM '.$tpref."admin WHERE login='$uid' AND pass='$pwd'");
-			if (count($res)==1) {
-			    if ($res==$uid) {
-					$_SESSION['admin']=$uid;
-					header ('Location: studlist.php');
-					exit();
-				} else {
-					$_SESSION['logfail']='-';
-				}
+			$res=DB::get_value_or_false('SELECT login FROM '.$tpref."admin WHERE login='$uid' AND pass='$pwd'");
+			if ($res==$uid) {
+				$_SESSION['admin']=$uid;
+				header ('Location: studlist.php');
+				exit();
 			} else {
 				$_SESSION['logfail']='-';
 			}

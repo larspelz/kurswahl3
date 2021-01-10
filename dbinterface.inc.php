@@ -29,6 +29,22 @@ include 'config.db.php';
 				die ("get_value ($query): ".DB::$sqli->error);
 			}
 		}
+		
+
+		/*
+		 * Executes a query and returns a single value if present, otherwise false.
+		 */		
+		static function get_value_or_false($query) {
+			if (!isset(DB::$sqli)) return;
+			$res=DB::$sqli->query($query);
+			if (!$res) return false;
+			if ($row = $res->fetch_row()) {
+				$res->free();
+				return $row[0];
+			} else {
+				die ("get_value ($query): ".DB::$sqli->error);
+			}
+		}
 
 		/*
 		 * Executes a query and returns all entries of the first column from the result set as associative array.
@@ -73,6 +89,17 @@ include 'config.db.php';
 			} else {
 				die ("get_assoc_row ($query): ".DB::$sqli->error);
 			}
+		}
+		
+
+		/*
+		 * Returns true if a query returns exactly one row.
+		 */		
+		static function check($query) {
+			if (!isset(DB::$sqli)) return;
+			$res=DB::$sqli->query($query);
+			if (!$res) return false;
+			return true;
 		}
 
 		/*
