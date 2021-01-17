@@ -1,4 +1,15 @@
 <?php
+
+session_start();
+
+if (isset($_SESSION['user']) && isset($_SESSION['admin'])) {
+	if ($_SESSION['admin'])
+		header( 'Location: studlist.php' );
+	else 
+		header( 'Location: auswahl.php' );
+	exit;
+}
+
 require __DIR__ . '/vendor/autoload.php';
 
 use Jumbojett\OpenIDConnectClient;
@@ -21,8 +32,43 @@ try {
 
 if($authresult == true) {
 	$userinfo = $oidc->requestUserInfo();
-	echo "IServ-Authentifizierung erfolgreich. Userinfo: <br />\n";
-	var_dump_pre($userinfo); 
+	//echo "IServ-Authentifizierung erfolgreich.<br>";
+	$grps=$userinfo->groups;
+	$admin=false;
+	$jg=false;
+	$user=$userinfo->preferred_username;
+	
+	foreach ($grps as $g) {
+		if ($g->act=='admins') $admin=true;
+		if (substr($g->act,0,9)=='klasse.10') $tgrp=substr($g->act,6,3);
+	}
+	if ($admin || isset($tgrp)) {
+		if (!$admin) {
+			// check whether student exists and create one if not available
+			include 'dbinterface.inc.php';
+			include 'getconfig.inc.php';
+			$tpref=gettableprefix();
+			DB::connect();
+			$dbuser=DB::get_value_or_false("SELECT snr FROM ".$tpref."schueler WHERE snr='".$user."'");
+			if (!$dbuser) {
+				$famname=$userinfo->family_name;
+				$givname=$userinfo->given_name;
+				DB::query("INSERT INTO ".$tpref."schueler (snr,name,vorname,prof1,prof2,klasse,kwfehler,kursadd) VALUES 
+			}
+		}
+		$_SESSION['school']='hum';
+		$_SESSION['year']=date('y');
+		$_SESSION['admin']=$admin;
+		$_SESSION['user']=$user;
+		if ($admin)
+			header( 'Location: studlist.php' );
+		else 
+			header( 'Location: auswahl.php' );
+		exit;
+	} else {
+		echo 'Du hast keinen Zugriff auf das Kurswahlmodul.';
+	}
+//	var_dump_pre($userinfo); 
 	exit;
 }
 

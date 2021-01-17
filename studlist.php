@@ -53,9 +53,9 @@ if ($s=='na') $order='name';
 if ($s=='vn') $order='vorname';
 if ($s=='kl') $order='klasse,name,vorname';
 
-$res=mysql_query ('SELECT snr, name, vorname, klasse, kwfehler, kursadd FROM '.$tpref.'schueler '.$errsel.' ORDER BY '.$order);
+$res=DB::get_assoc ('SELECT snr, name, vorname, klasse, kwfehler, kursadd FROM '.$tpref.'schueler '.$errsel.' ORDER BY '.$order);
 
-while ($data=mysql_fetch_assoc($res)) {
+foreach ($res as $data) {
 	$snr=$data['snr'];
 	$ccount=countcourses($snr,$tpref);
 	echo '<tr><td class="admin"><a name="'.$snr.'" href="auswahl.php?snr='.$snr.'">'.$snr.'</a></td>'.

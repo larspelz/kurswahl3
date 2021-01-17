@@ -2,11 +2,11 @@
 
 // Kurse von der DB zählen lassen
 function countcourses($snr,$tpref) {
-    $gkanz=DB::get_value('SELECT COUNT(fachkurz) FROM '.$tpref.'waehlt WHERE (NOT sem=0) AND snr='.$snr); // sem=0 0=> Sportbefreiung
+    $gkanz=DB::get_value('SELECT COUNT(fachkurz) FROM '.$tpref."waehlt WHERE (NOT sem=0) AND snr='$snr'"); // sem=0 0=> Sportbefreiung
 	
 	// pf=5 => 5. Prüfungskomponente, nicht mitzählen!
 	// pf=6 => Eintrag für BLL oder Präsentation, nicht mitzählen!
-    $pf=DB::get_list('SELECT fachkurz FROM '.$tpref.'waehltpf WHERE pf IN (1,2,3,4,7) AND NOT fachkurz=\'no\' AND snr='.$snr);
+    $pf=DB::get_list('SELECT fachkurz FROM '.$tpref."waehltpf WHERE pf IN (1,2,3,4,7) AND NOT fachkurz='no' AND snr='$snr'");
 	if (count($pf)==0) return $gkanz;
 	return $gkanz+count(array_unique($pf))*4;
 }
