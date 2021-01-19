@@ -1,8 +1,8 @@
 <?php
 function getStudName ($u,$tpref) {
 	if ($u=="") return "";
-	$data=DB::get_assoc('SELECT name, vorname FROM '.$tpref."schueler WHERE snr=$u");
-	return $data[1].' '.$data[0];
+	$data=DB::get_assoc_row('SELECT name, vorname FROM '.$tpref."schueler WHERE snr='$u'");
+	return $data['vorname'].' '.$data['name'];
 }
 
 function item($text,$url) {

@@ -59,7 +59,7 @@ include 'getconfig.inc.php'; ?>
     	}
     	echo '"'.$dt[count($dt)-1].'");';
     	// Nachschauen, ob schon eine gespeicherte Kurswahl existiert (kwfehler>0)
-    	$kwf=DB::get_value('SELECT kwfehler FROM '.$tpref.'schueler WHERE snr='.$uid);
+    	$kwf=DB::get_value('SELECT kwfehler FROM '.$tpref."schueler WHERE snr='$uid'");
     	if ($kwf>0) echo 'saved=true;';
     	echo '</script>';
     }

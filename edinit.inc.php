@@ -1,17 +1,17 @@
 <?php
 	
 	include 'getconfig.inc.php';
+
+//	DB::connect();	
+	//echo DB::sqli(); 
+	if (DB::sqli()==NULL) die ('edinit: no sqli');
+	
    $tpref=gettableprefix();
 	
    function loadFach($sel,$tpref) {
-      $res=mysql_query ('SELECT kurz,lang,ord,semwaehlbar FROM '.$tpref.'fach WHERE '.$sel.' ORDER BY ord');
-	  if (!$res) echo 'loadFach fail: '.$sel;
-      $ret=array();
-      while ($data=mysql_fetch_assoc($res)) {
-         $ret[]=$data;
-/*		 // Umlaute berichtigen
-		 $ret[count($ret)-1]['lang']=htmlentities($ret[count($ret)-1]['lang']);*/
-      }
+   	//if (!isset(DB::$sqli)) die ('load: no sqli');
+      $ret=DB::get_assoc ('SELECT kurz,lang,ord,semwaehlbar FROM '.$tpref.'fach WHERE '.$sel.' ORDER BY ord');
+	   //if (!$ret) echo 'loadFach fail: '.$sel.' '.$tpref;
       return $ret;
    }
 
@@ -27,18 +27,21 @@
 
    $fach_wahl=array();
    // Belegung der Grundkurse laden
-   $res=mysql_query('SELECT fachkurz,sem FROM '.$tpref.'waehlt WHERE snr=\''.$uid.'\'');
-   while ($data=mysql_fetch_assoc($res)) {
-	  $fach_wahl[$data['fachkurz']][]=$data['sem'];
-   }
+   $temp=DB::get_assoc('SELECT fachkurz,sem FROM '.$tpref."waehlt WHERE snr='$uid'");
+   //echo '<br>temp '.$temp.' '.gettype($temp).'<br>';
+   if ($temp) {
+	   foreach ($temp as $t) {
+		  $fach_wahl[$t['fachkurz']][]=$t['sem'];
+	   }
+	}
 
    // Prüfungsfächerwahl laden
-   $res=mysql_query('SELECT fachkurz,pf FROM '.$tpref.'waehltpf WHERE snr=\''.$uid.'\'');
+   $temp=DB::get_assoc('SELECT fachkurz,pf FROM '.$tpref."waehltpf WHERE snr='$uid'");
    $fach_pf=array();
    for ($l=0;$l<8;$l++) $fach_pf[$l]='';
    if ($res) {
-      while ($data=mysql_fetch_assoc($res)) {
-	     $fach_pf[$data['pf']]=$data['fachkurz'];
+      foreach ($temp as $t) {
+	     $fach_pf[$t['pf']]=$t['fachkurz'];
       }
    }
    

@@ -27,7 +27,7 @@ include 'tools.inc.php';
 ?>
 <div id="cont">
 <table cellpadding=3 class="admin"><tr>
-<th class="admin"><a href="studlist.php?sort=nm">Nr.</a></th>
+<th class="admin"><a href="studlist.php?sort=nm">Account</a></th>
 <th class="admin"><a href="studlist.php?sort=na">Name</a></th>
 <th class="admin"><a href="studlist.php?sort=vn">Vorname</a></th>
 <th class="admin"><a href="studlist.php?sort=kl">Klasse</a></th>

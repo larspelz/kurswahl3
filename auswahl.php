@@ -21,7 +21,7 @@
 			}
    }
 
-   include 'dbconnect.inc.php';
+   include 'dbinterface.inc.php';
    include 'auth.inc.php';
    include 'getconfig.inc.php';
    $tpref=gettableprefix();
@@ -34,20 +34,13 @@
 			exit();
 		}
 
-   } /*else {
-		$uid=$_SESSION['user'];
-		$res=mysql_query('SELECT mail FROM '.$tpref."schueler WHERE snr=$uid");
-		$mail=mysql_fetch_row($res)[0];
-		if ($mail=='') {
-			header( 'Location: getmail.php' );
-			exit();
-		}
-   }*/
+   }    
    
-   
+   DB::connect();
 
    include 'header.inc.php';
    include 'menu.inc.php';
+   
    include 'edinit.inc.php';
 
 ?>

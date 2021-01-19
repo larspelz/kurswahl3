@@ -10,7 +10,9 @@ include 'config.db.php';
 		 * Create a connection to the database server.
 		 */
 		static function connect() {
+			if (isset(DB::$sqli)) die ("db reconnect");
 			DB::$sqli= new mysqli(DBConfig::$host,DBConfig::$user,DBConfig::$pwd,DBConfig::$database);
+			if (!isset(DB::$sqli)) die ("connect: no sqli");
 			DB::$sqli->set_charset('utf8');
 			return DB::$sqli;
 		}
@@ -47,7 +49,7 @@ include 'config.db.php';
 		}
 
 		/*
-		 * Executes a query and returns all entries of the first column from the result set as associative array.
+		 * Executes a query and returns all entries of the first column from the result set indexed array.
 		 */
 		static function get_list($query) {
 			if (!isset(DB::$sqli)) return;
@@ -62,10 +64,10 @@ include 'config.db.php';
 		}
 
 		/*
-		 * Executes a query and returns the complete result as array of associate arrays.
+		 * Executes a query and returns the complete result as array of associative arrays.
 		 */
 		static function get_assoc($query) {
-			if (!isset(DB::$sqli)) return;
+			if (!isset(DB::$sqli)) die ("get_assoc: no sqli");
 			$res=DB::$sqli->query($query);
 			if (!$res) die ("get_assoc ($query): ".DB::$sqli->error);
 			$data=array();
@@ -140,6 +142,10 @@ include 'config.db.php';
 			$fp = fopen('db.log', 'a');
 			fwrite($fp, date("Y-m-d H:i:s").': '.$tag.': '.$data."\n");
 			fclose($fp);
+		}
+		
+		static function close() {
+			mysqli_close(DB::$sqli);
 		}
 		
 	}
