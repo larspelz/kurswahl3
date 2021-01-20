@@ -63,7 +63,7 @@ function itemjs($text,$onclick) {
 			}
 			echo item('Zur&uuml;ck','studlist.php#'.$uid);
 			echo itemjs ('Speichern','save();');
-			echo '<li id="savenotify" style="width:270px;" align="center">'.
+			echo '<li id="savenotify" style="width:320px;" align="center">'.
 				'<b style="background-color:#DDDDDD;color:green;">keine &Auml;nderungen</b></li>'."\n";
 			/*echo item('Aufgaben','#');
 			echo '<ul id="mu">'.*/
@@ -87,7 +87,7 @@ function itemjs($text,$onclick) {
 			echo itemtxcl('Einstellungen','black');
 			echo '<ul id="mu">'.
 				item('Zur&uuml;ck','studlist.php');
-			echo '<li id="savenotify" style="width:300px;" align="center">'.
+			echo '<li id="savenotify" style="width:320px;" align="center">'.
 				'<b style="background-color:#DDDDDD;color:green;">Einstellungen gespeichert.</b>'.
 				'</li>'."\n";
 			echo itemjs('Speichern','settingsave();');
@@ -103,7 +103,7 @@ function itemjs($text,$onclick) {
 			echo itemtx('Willkommen '.getStudName($uid,$tpref));
 		}
 
-		echo '<li id="savenotify" style="width:270px;" align="center">'.
+		echo '<li id="savenotify" style="width:320px;" align="center">'.
     	   '<b style="background-color:#DDDDDD;color:green;">Kurswahl ist gespeichert.</b>'.
     	   '</li>'."\n";
 		echo itemjs('Speichern','save();');

@@ -6,10 +6,12 @@
 		header( 'Location: index.php' );
 	}
 
-	include 'dbconnect.inc.php';
+	include 'dbinterface.inc.php';
 	include 'checkfunc.inc.php';
 	include 'getconfig.inc.php';
 	$tpref=gettableprefix();
+
+	DB::connect();	
 	
 	$snr=array();
 	if (isset($_GET['num'])) {
@@ -17,14 +19,11 @@
 		$snr[]=$_GET['num'];
 	} else {
 		// alle Schueler bearbeiten
-		$res=mysql_query('SELECT snr FROM '.$tpref.'schueler');
-		while ($data=mysql_fetch_assoc($res)) {
-			$snr[]=$data['snr'];
-		}
+		$snr=DB::get_list('SELECT snr FROM '.$tpref.'schueler');
 	}
 	
-	$err=check($snr,'db',$tpref);
+	$err=check($snr,'stud',$tpref); // TODO: mode=db!
+	echo $err;
+	//header( 'Location: studlist.php' );
 	
-	header( 'Location: studlist.php' );
-
 ?>

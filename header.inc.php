@@ -10,8 +10,7 @@ include 'getconfig.inc.php'; ?>
 <title>Kurswahl
 <?php 
 	if ((isset($_SESSION['user'])||isset($_SESSION['admin'])) && !isset ($_SESSION['logfail'])) {
-		$res=DB::get_value("SELECT name FROM kurswahl_schule WHERE schulnr='".$_SESSION['school']."'");
-		if (count($res)==1) $schoolname=$res; else $schoolname='Online';
+		$schoolname=DB::get_value("SELECT name FROM kurswahl_schule WHERE schulnr='".$_SESSION['school']."'");
 	} else
 		$schoolname='Online';
 	echo $schoolname;
@@ -76,7 +75,7 @@ include 'getconfig.inc.php'; ?>
 <font size="5" face="Arial, Helvectica">Kurswahlsystem
 <?php
 	echo ' '.$schoolname;
-?></font><font size="3"> Version 2018</font> 
+?></font>
 <?php
 	if (isset($isadmin) && $isadmin) echo '<font color="darkred">Administration</font>';
 ?>

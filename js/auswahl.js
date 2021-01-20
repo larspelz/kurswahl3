@@ -1,11 +1,10 @@
-
-saved=false;
+var saved=false;
 
 var axobj = false;
 
-pffields= ['lk1','lk2','pf3','pf4','pk5','lk3'];
-pfold=['no','no','no','no','no','no','no'];
-pfcolors=['#FF0000','#FFC39F','#C0FFC0','#C0C0FF','#FFCCAA',''];
+var pffields= ['lk1','lk2','pf3','pf4','pk5','lk3'];
+var pfold=['no','no','no','no','no','no','no'];
+var pfcolors=['#FF0000','#FFC39F','#C0FFC0','#C0C0FF','#FFCCAA',''];
 
 if (typeof XMLHttpRequest != 'undefined') {
     axobj = new XMLHttpRequest();
@@ -26,13 +25,13 @@ if (!axobj) {
 function getCheckedValue(radioObj) {
 	if(!radioObj)
 		return "";
-	var radioLength = radioObj.length;
+	let radioLength = radioObj.length;
 	if(radioLength == undefined)
 		if(radioObj.checked)
 			return radioObj.value;
 		else
 			return "";
-	for(var i = 0; i < radioLength; i++) {
+	for(let i = 0; i < radioLength; i++) {
 		if(radioObj[i].checked) {
 			return radioObj[i].value;
 		}
@@ -41,8 +40,8 @@ function getCheckedValue(radioObj) {
 }
 
 function encodeForms() {
-	pff=document.forms['pf'];
-	fdata="";
+	let pff=document.forms['pf'];
+	let fdata="";
 	fdata+="snr="+pff.snr.value+"&";
 	fdata+="lk1="+pff.lk1.value+"&";
 	fdata+="lk2="+pff.lk2.value+"&";
@@ -55,7 +54,8 @@ function encodeForms() {
 	// Array "fach" wird automatisch in header.inc.php erzeugt und enthält die Ordnungsnummern der Fächer
 	// als belegt angezeigte Prüfungsfächer werden mit übertragen
 	// und serverseitig ausgefiltert
-	for (i=0;i<fach.length-1;i++) {
+	let field="";
+	for (let i=0;i<fach.length-1;i++) {
 		field="G"+fach[i];
 		fdata+=fach[i]+"="+gkelem(field).value+"&";
 	}
@@ -72,7 +72,7 @@ function save() {
 	saved=true;
 	document.getElementById('savenotify').innerHTML='<b style="background-color:#DDDDDD;color:#002288;">SPEICHERN</b>';
 	axobj.open('POST','wsichern.php');
-	params=encodeForms();
+	let params=encodeForms();
 	axobj.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
     axobj.onreadystatechange = handleContent;
     axobj.send(params);
@@ -82,7 +82,7 @@ function save() {
 // AJAX Antwort-Betreuer (response handler)
 function handleContent() {
 	if (axobj.readyState == 4) {
-        document.getElementById('savenotify').innerHTML = '<b style="background-color:#DDDDDD;color:green;">Kurswahl ist gespeichert.</b>';
+      document.getElementById('savenotify').innerHTML = '<b style="background-color:#DDDDDD;color:green;">Kurswahl ist gespeichert.</b>';
 		document.getElementById('info').innerHTML = decodeinfo(axobj.responseText);
 //		alert(axobj.responseText);
     }
@@ -151,13 +151,13 @@ function errtext(wh) {
 }
 
 function decodeinfo(res) {
-	tokens=res.split(',');
-	inf="Anzahl Kurse: "+tokens[0];
+	let tokens=res.split(',');
+	let inf="Anzahl Kurse: "+tokens[0];
 	if (tokens.length>1)
 		inf+=' &nbsp;&nbsp;&nbsp;<b style="color:red;">Hinweise:</b>';
 	else 
 		inf+=' -- Danke, die Kurswahl scheint fehlerfrei zu sein.';
-	for (a=1;a<tokens.length;a++) {
+	for (let a=1;a<tokens.length;a++) {
 		//info+=' <a href="#" onClick="info(\''+tokens[a]+'\');">'+tokens[a]+'</a>';
 		inf+=" <a href=\"#\" onClick=\"info(\'"+tokens[a]+"\');\">"+errtext(tokens[a])+'</a>&nbsp;&nbsp;&nbsp;';
 	}
@@ -173,7 +173,7 @@ function gkelem(str) {
 }
 
 function getpfnum(which) {
-	for (i=0;i<pffields.length;i++) {
+	for (let i=0;i<pffields.length;i++) {
 		if (which==pffields[i]) return i;
 	}
 }
@@ -181,7 +181,7 @@ function getpfnum(which) {
 function restorecolor(num) {
   if (pfold[num]!='no') {
 	if (document.getElementById("C"+pfold[num])==null) return;
-	rcolor=pfcolors[document.getElementById("G"+pfold[num]).name[1]];
+	let rcolor=pfcolors[document.getElementById("G"+pfold[num]).name[1]];
 	document.getElementById("C"+pfold[num]).bgColor=rcolor;
 	document.getElementById("G"+pfold[num]).value='no';
 	document.getElementById("G"+pfold[num]).disabled=false;
@@ -190,15 +190,14 @@ function restorecolor(num) {
 
 function changepf(which) {
 	// f = fachkurz des Faches, das als PF gewählt wurde
-	f=pfelem(which).value;
-	num=getpfnum(which);
+	let f=pfelem(which).value;
+	let num=getpfnum(which);
 	if (f=='no') {
-		ds=false; // flag zur Feststellung der Doppelbelegung
+		let ds=false; // flag zur Feststellung der Doppelbelegung
 		if ((which=='pk5') || (which=='lk3')) {
-			for (a=0;a<pffields.length;a++) {
+			for (let a=0;a<pffields.length;a++) {
 				if (which==pffields[a]) continue;
-				fachchk=pfelem(pffields[a]).value;
-				if (pfold[num]==fachchk) {
+				if (pfold[num]==pfelem(pffields[a]).value) {
 					ds=true;
 				}
 			}
@@ -210,8 +209,8 @@ function changepf(which) {
 	}
 	if (which!='pk5') {
 		// prüfen, ob Prüfungsfach zweimal gewählt, dann löschen
-		doublesel=false;
-		for (a=0;a<pffields.length;a++) {
+		let doublesel=false;
+		for (let a=0;a<pffields.length;a++) {
 		
 			if (pffields[a]=='pk5') continue; // 5. PF darf doppelt
 			
@@ -220,7 +219,7 @@ function changepf(which) {
 			if ((which=='pf3') && pffields[a]=='lk3') continue; 
 			if ((which=='pf4') && pffields[a]=='lk3') continue; 
 			
-			pfsel=pfelem(pffields[a]);
+			let pfsel=pfelem(pffields[a]);
 			if (which==pffields[a]) continue;
 			if (f==pfsel.value) {
 				doublesel=true;
@@ -244,12 +243,11 @@ function changepf(which) {
 	   document.getElementById("G"+f).disabled=true;
 	}
 	// vorher deaktiviertes Auswahlfeld aktivieren, Farbe wiederherstellen
-	ds=false;
+	let ds=false;
 	if ((which=='pk5') || (which=='lk3')) {
-		for (a=0;a<pffields.length;a++) {
+		for (let a=0;a<pffields.length;a++) {
 			if (which==pffields[a]) continue;
-			fachchk=pfelem(pffields[a]).value;
-			if (pfold[num]==fachchk) {
+			if (pfold[num]==pfelem(pffields[a]).value) {
 				ds=true;
 			}
 		}
@@ -272,8 +270,8 @@ function change() {
 }
 
 function setup() {
-	for (i=0;i<pffields.length;i++) {
-		f=pfelem(pffields[i]).value;
+	for (let i=0;i<pffields.length;i++) {
+		let f=pfelem(pffields[i]).value;
 		if (f!='no') {
 		   pfold[i]=f;
 		   // GK-Auswahlfeld deaktivieren
@@ -288,7 +286,7 @@ function setup() {
 
 function close(url) {
 	if (!saved) {
-		ok=confirm ("Die Kurswahl ist nicht gespeichert.\r\nWollen Sie die Seite trotzdem verlassen?");
+		let ok=confirm ("Die Kurswahl ist nicht gespeichert.\r\nWollen Sie die Seite trotzdem verlassen?");
 		if (ok) document.href=url; else return false;
 		//alert("Bitte die Kurswahl speichern \r\n oder den Browser schliessen!");
 		//return false;

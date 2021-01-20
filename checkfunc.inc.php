@@ -8,35 +8,15 @@ function check($snr,$mode,$tpref) {
 	if ($mode!='db' && $mode!='export' && $mode!='stud') return;
 
     // Faecherinfo laden (siehe pdf-export.php)
-	$af2=array();
-	$res=mysql_query('SELECT kurz FROM '.$tpref.'fach WHERE ord>199 AND ord<300 ORDER BY ord');
-	while ($r=mysql_fetch_assoc($res)) {
-		$af2[]=$r['kurz'];
-	}
-
-	$af3=array();
-	$res=mysql_query('SELECT kurz FROM '.$tpref.'fach WHERE ord>299 AND ord<400 AND kurz NOT IN (\'SP\',\'ST\') ORDER BY ord');
-	while ($r=mysql_fetch_assoc($res)) {
-		$af3[]=$r['kurz'];
-	}
-
-	$fs=array();
-	$res=mysql_query('SELECT kurz FROM '.$tpref.'fach WHERE fachgr=\'FS\' ORDER BY ord');
-	while ($r=mysql_fetch_assoc($res)) {
-		$fs[]=$r['kurz'];
-	}
-
-	$nw=array();
-	$res=mysql_query('SELECT kurz FROM '.$tpref.'fach WHERE fachgr=\'NW\' ORDER BY ord');
-	while ($r=mysql_fetch_assoc($res)) {
-		$nw[]=$r['kurz'];
-	}
-
-	$kf=array();
-	$res=mysql_query('SELECT kurz FROM '.$tpref.'fach WHERE fachgr=\'KF\' ORDER BY ord');
-	while ($r=mysql_fetch_assoc($res)) {
-		$kf[]=$r['kurz'];
-	}
+	$af2=DB::get_list('SELECT kurz FROM '.$tpref.'fach WHERE ord>199 AND ord<300 ORDER BY ord');
+	
+	$af3=DB::get_list('SELECT kurz FROM '.$tpref.'fach WHERE ord>299 AND ord<400 AND kurz NOT IN (\'SP\',\'ST\') ORDER BY ord');
+	
+	$fs=DB::get_list('SELECT kurz FROM '.$tpref.'fach WHERE fachgr=\'FS\' ORDER BY ord');
+	
+	$nw=DB::get_list('SELECT kurz FROM '.$tpref.'fach WHERE fachgr=\'NW\' ORDER BY ord');
+	
+	$kf=DB::get_list('SELECT kurz FROM '.$tpref.'fach WHERE fachgr=\'KF\' ORDER BY ord');
 
 	// Pruefungen durchfuehren
 	foreach ($snr as $n) {
@@ -44,26 +24,21 @@ function check($snr,$mode,$tpref) {
 		$error=array();
 
 		// Pruefungsfaecher laden
-		$pf=array();
-		$res=mysql_query('SELECT fachkurz FROM '.$tpref.'waehltpf WHERE snr='.$n.' ORDER BY pf');
-		while ($data=mysql_fetch_assoc($res)) {
-			$pf[]=$data['fachkurz'];
-		}
+		$pf=DB::get_list('SELECT fachkurz FROM '.$tpref."waehltpf WHERE snr='$n' ORDER BY pf");
+
 		if (count($pf)==0) $error[]='nopf';
 
 		// andere Belegung laden
 		// $gk [fachkurz] [semester], siehe auswahl.php
+		$tmp=DB::get_assoc('SELECT fachkurz,sem FROM '.$tpref."waehlt WHERE snr='$n'");
 		$gk=array();
-		$res=mysql_query('SELECT fachkurz,sem FROM '.$tpref.'waehlt WHERE snr='.$n);
-		while ($data=mysql_fetch_assoc($res)) {
-			$gk[$data['fachkurz']][]=$data['sem'];
+		foreach ($tmp as $t) {
+			$gk[$t['fachkurz']][]=$t['sem'];
 		}
 		if (count($gk)==0) $error[]='nogk';
 		
 		// Sportkurse laden (nur prüfen, ob welche vorhanden sind)
-		$sql='SELECT COUNT(*) FROM '.$tpref.'waehltsp WHERE sNummer='.$n;
-		$res=mysql_query($sql);
-		$spcount=mysql_fetch_row($res);
+		$spcount=DB::get_value('SELECT COUNT(*) FROM '.$tpref."waehltsp WHERE snr='$n'");
 		if ($spcount[0]<1) $error[]='nosp';
 
 		// wenn alles richtig geladen...
@@ -78,8 +53,8 @@ function check($snr,$mode,$tpref) {
 
 			// Kursanzahl prüfen
 			$Pcnt=countcourses($n,$tpref);
-			$res=mysql_query('SELECT kursadd FROM '.$tpref."schueler WHERE snr=$n");
-			$kursadd=mysql_fetch_row($res)[0];
+			$kursadd=DB::get_value('SELECT kursadd FROM '.$tpref."schueler WHERE snr='$n'");
+			
 			if ($pf[6]!='no') {
 				if ($Pcnt!=(37+$kursadd) && $Pcnt!=(38+$kursadd)) $error[]='cnt';
 			} else {
@@ -154,9 +129,9 @@ function check($snr,$mode,$tpref) {
 
 		if ($mode=='db' || $mode=='stud') {
 			if (count($error)>0)
-				$res=mysql_query ('UPDATE '.$tpref.'schueler SET kwfehler=\''.implode(', ',$error).'\' WHERE snr='.$n);
+				DB::query ('UPDATE '.$tpref."schueler SET kwfehler='".implode(', ',$error)."' WHERE snr='$n'");
 			else
-				$res=mysql_query ('UPDATE '.$tpref.'schueler SET kwfehler=\'ok\' WHERE snr='.$n);
+				DB::query ('UPDATE '.$tpref."schueler SET kwfehler='ok' WHERE snr='$n'");
 		}
 	}
 
