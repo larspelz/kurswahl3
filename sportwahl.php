@@ -1,22 +1,21 @@
 <?php
 
 function setextra($kurz,$set,$snr,$tpref,$sem) {
-	$sql='DELETE FROM '.$tpref."waehltsp WHERE sNummer=$snr AND sem='$sem'";
+	$sql='DELETE FROM '.$tpref."waehltsp WHERE snr='$snr' AND sem=$sem";
 	//echo $sql.'<br>';
-	$res=mysql_query($sql);
-	$kurz=mysql_real_escape_string($kurz);
+	$res=DB::query($sql);
+	$kurz=DB::esc($kurz);
 	if ($set) {
-		$sql='INSERT INTO '.$tpref."waehltsp (sNummer,kuerzel,sem) VALUES ($snr,'$kurz',$sem)";
+		$sql='INSERT INTO '.$tpref."waehltsp (snr,kuerzel,sem) VALUES ('$snr','$kurz',$sem)";
 		//echo $sql.'<br>';
-		mysql_query($sql);
+		DB::query($sql);
 	}
 }
 
 function getextra($snr,$tpref,$sem) {
-	$res=mysql_query('SELECT kuerzel FROM '.$tpref."waehltsp WHERE sNummer=$snr AND sem='$sem'");
-	if (mysql_num_rows($res)>0) {
-		$data=mysql_fetch_row($res);
-		return $data[0];
+	$res=DB::get_value_or_false('SELECT kuerzel FROM '.$tpref."waehltsp WHERE snr='$snr' AND sem=$sem");
+	if (is_string($res)) {
+		return $res;
 	} else {
 		return 'no';
 	}
@@ -24,7 +23,9 @@ function getextra($snr,$tpref,$sem) {
 
 session_start();
 
-  	include 'dbconnect.inc.php';
+  	include 'dbinterface.inc.php';
+  	
+  	DB::connect();
 
 	include 'auth.inc.php';
 	include 'getconfig.inc.php';
@@ -34,9 +35,9 @@ session_start();
 	$kuerzel=array();
 	$langname=array();
 	$hat2ls=array();
-  	$res=mysql_query('SELECT kuerzel,langname,hat2ls FROM '.$tpref.'sportkurs');
+  	$res=DB::get_assoc('SELECT kuerzel,langname,hat2ls FROM '.$tpref.'sportkurs');
   	$k=0;
-  	while ($data=mysql_fetch_assoc($res)) {
+  	foreach ($res as $data) {
   		$kuerzel[$k]=$data['kuerzel'];
   		$langname[$k]=$data['langname'];
 		$hat2ls[$k]=$data['hat2ls'];
@@ -47,17 +48,15 @@ session_start();
   	if ($isadmin) {
   		if (isset ($_POST['num'])) {
   			// admin issued a save
-  			$uid=mysql_real_escape_string($_POST['num']);
+  			$uid=DB::esc($_POST['num']);
   		} else {
   			// admin first look
-  			if (isset($_GET['num'])) $uid=mysql_real_escape_string($_GET['num']);
+  			if (isset($_GET['num'])) $uid=DB::esc($_GET['num']);
   		}
   	} else {
   		// user loop
 	  	$uid=$_SESSION['user'];
 	}
-	$res=mysql_query('SELECT mail FROM '.$tpref."schueler WHERE snr=$uid");
-	$mail=mysql_fetch_assoc($res)['mail'];
 	
 	include 'header.inc.php';
 	include 'menu.inc.php';
@@ -67,20 +66,16 @@ session_start();
   		for ($i=1;$i<6;$i++){
   			$kurs=$_POST['k'.$i];
   			$ls=$_POST['ls'.$i];
-  			$res=mysql_query('SELECT * from '.$tpref."waehltsp WHERE sNummer=$uid AND sem=$i");
-  			if (mysql_num_rows($res)) {
+  			$res=DB::get_value_or_false('SELECT * from '.$tpref."waehltsp WHERE snr='$uid' AND sem=$i");
+  			$sql='';
+  			if (is_string($res)) {
   				// entry already present, needs UPDATE
-  				$sql='UPDATE '.$tpref."waehltsp SET kuerzel='".$kurs.
-  					"', lstufe=".$ls." WHERE sNummer=".$uid." AND sem=".$i;
-  				//echo $sql.'<br>';
-  				mysql_query($sql);
+  				$sql='UPDATE '.$tpref."waehltsp SET kuerzel='$kurs', lstufe=$ls WHERE snr='$uid' AND sem=$i";
   			} else {
   				// entry is not present, needs INSERT
-  				$sql='INSERT INTO '.$tpref.'waehltsp (sNummer,kuerzel,sem,lstufe) VALUES '.
-  					"(".$uid.",'".$kurs."',".$i.",".$ls.")";
-  				//echo $sql.'<br>';
-  				mysql_query($sql);
+  				$sql='INSERT INTO '.$tpref."waehltsp (snr,kuerzel,sem,lstufe) VALUES ('$uid','$kurs',$i,$ls)";
   			}
+			DB::query($sql);
   		}
   		if ($_POST['ski']=='y') {
 			setextra('SK',true,$uid,$tpref,6);
@@ -106,11 +101,6 @@ session_start();
   			setextra($_POST['chi'],false,$uid,$tpref,12);
   		}
 		
-		/*$mail=mysql_real_escape_string($_POST['mail']);
-		include 'tools.inc.php';
-		if (check_email_address($mail)) 
-			mysql_query('UPDATE '.$tpref."schueler SET mail='$mail' WHERE snr=$uid");*/
-		
   	}
 ?>
 <center>
@@ -128,17 +118,16 @@ Sportkurse
 	}
 	
   	// load student's choice from db
-  	$res=mysql_query('SELECT kuerzel,sem,lstufe FROM '.$tpref."waehltsp WHERE sNummer=$uid");
-	echo mysql_error();
-  	while ($data=mysql_fetch_row($res)) {
-  		$wahl[$data[1]]=$data[0];
-  		$lstufe[$data[1]]=$data[2];
+  	$res=DB::get_assoc('SELECT kuerzel,sem,lstufe FROM '.$tpref."waehltsp WHERE snr='$uid'");
+  	foreach ($res as $data) {
+  		$wahl[$data['sem']]=$data['kuerzel'];
+  		$lstufe[$data['sem']]=$data['lstufe'];
   	}
 
   	// build form content
 ?>
-
-<table border="1" cellpadding="7"><tr><td>1. Kurs</td><td>2. Kurs</td><td>3. Kurs</td><td>4. Kurs</td><td>Alternative</td></tr>
+<table border="1" cellpadding="7">
+<tr><td>1. Kurs</td><td>2. Kurs</td><td>3. Kurs</td><td>4. Kurs</td><td>Alternative</td></tr>
 <tr>
 <?php
 	// build drop down boxes
@@ -147,25 +136,24 @@ Sportkurse
 		     '<option value="none">Auswahl!</option>';
 		for ($k=0;$k<count($kuerzel);$k++) {
 			// check whether student selected this course before
-			if ($wahl[$i]==$kuerzel[$k]) {
-				$sel='selected';
-			} else {
-				$sel='';
+			if (isset($wahl[$i])) {
+				if ($wahl[$i]==$kuerzel[$k]) {
+					$sel='selected';
+				} else {
+					$sel='';
+				}
 			}
+			if (!isset($sel)) $sel='';
 			echo '<option '.$sel.' value="'.$kuerzel[$k].'">'.$langname[$k].'</option>'."\n";
 		}
-?>
-</select><br>
-Leistungsstufe:<br><select name="ls<?php echo $i;?>" id="ls<?php echo $i;?>" onblur="check(<?php echo $i;?>);">
+	echo '</select><br>
+	Leistungsstufe:<br><select name="ls'.$i.'" id="ls'.$i.'" onblur="check('.$i.');">
 	<option>1</option>
-	<option <?php
+	<option';
 		// detect chosen grading level
 		if (isset($lstufe)) 
-			if ($lstufe[$i]=='2') echo 'selected'
-	?>>2</option>
-</select>
-</td>
-<?php
+			if ($lstufe[$i]=='2') echo 'selected';
+	echo '>2</option></select></td>';
 	}
 ?>
 </tr>
@@ -173,9 +161,11 @@ Leistungsstufe:<br><select name="ls<?php echo $i;?>" id="ls<?php echo $i;?>" onb
 M&ouml;chten Sie an der Skifahrt teilnehmen? &nbsp;&nbsp;
 <select name="ski" id="ski">
 <option value="n">Nein</option>
-<option <?php
+<?php 
+	echo '<option ';
 	if (getextra($uid,$tpref,6)=='SK') echo 'selected';
-?> value="y">Ja</option>
+   echo ' value="y">Ja</option>';
+?>
 </select>
 </td></tr></table>
 
@@ -191,8 +181,6 @@ Der Sportkurs <b>Klettern</b> findet an ausgew&auml;hlten Terminen am Samstag st
 <span style="position:relative; top:-10px; margin-left: 20px; background-color:#fff;padding:0 10px;" >
 Auslandsaufenthalt
 </span>
-<input type="hidden" name="data" value="nothing">
-<?php if ($isadmin) echo '<input type="hidden" name="num" value="'.$uid.'">'; ?>
 <br>In welchen Semestern haben Sie vor ins Ausland <br>zu gehen? <select name="exchg">
 <option value="no">kein</option>
 <option value="EX1"
@@ -267,15 +255,12 @@ Leistungskurs Chinesisch
 ?>>Nein</option>
 </select>
 </div>
-</td><td>
-<div style="border: 2px solid darkblue; padding:5px; display:table;width:auto;">
-<!-- <span style="position:relative; top:-10px; margin-left: 20px; background-color:#fff;padding:0 10px;" >
-E-Mail-Adresse
-</span>
- <br>Ihre E-Mail-Adresse lautet:<br> <input type="text" name="mail" value="<?php echo ($mail); ?>"> -->
-</div>
+</td><td>&nbsp;
 </td></tr></table>
+<input type="hidden" name="data" value="nothing">
+<?php if ($isadmin) echo '<input type="hidden" name="num" value="'.$uid.'">' ?>
 </form>
 </center>
+</body>
 </body>
 </html>

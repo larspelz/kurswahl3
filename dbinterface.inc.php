@@ -21,7 +21,7 @@ include 'config.db.php';
 		 * Executes a query and returns a single value.
 		 */
 		static function get_value($query) {
-			if (!isset(DB::$sqli)) return;
+			if (!isset(DB::$sqli)) die ("get_value ($query): no sqli");
 			$res=DB::$sqli->query($query);
 			if (!$res) die ("get_value ($query): ".DB::$sqli->error);
 			if ($row = $res->fetch_row()) {
@@ -37,14 +37,15 @@ include 'config.db.php';
 		 * Executes a query and returns a single value if present, otherwise false.
 		 */		
 		static function get_value_or_false($query) {
-			if (!isset(DB::$sqli)) return;
+			if (!isset(DB::$sqli)) die ("get_value_or_false ($query): no sqli");
 			$res=DB::$sqli->query($query);
 			if (!$res) return false;
+			if ($res->num_rows==0) return false;
 			if ($row = $res->fetch_row()) {
 				$res->free();
 				return $row[0];
 			} else {
-				die ("get_value ($query): ".DB::$sqli->error);
+				die ("get_value_or_false ($query): ".DB::$sqli->error);
 			}
 		}
 
@@ -52,7 +53,7 @@ include 'config.db.php';
 		 * Executes a query and returns all entries of the first column from the result set indexed array.
 		 */
 		static function get_list($query) {
-			if (!isset(DB::$sqli)) return;
+			if (!isset(DB::$sqli)) die ("get_list ($query): no sqli");
 			$res=DB::$sqli->query($query);
 			if (!$res) die ("get_list ($query): ".DB::$sqli->error);
 			$data=array();
@@ -67,7 +68,7 @@ include 'config.db.php';
 		 * Executes a query and returns the complete result as array of associative arrays.
 		 */
 		static function get_assoc($query) {
-			if (!isset(DB::$sqli)) die ("get_assoc: no sqli");
+			if (!isset(DB::$sqli)) die ("get_assoc ($query): no sqli");
 			$res=DB::$sqli->query($query);
 			if (!$res) die ("get_assoc ($query): ".DB::$sqli->error);
 			$data=array();
@@ -82,7 +83,7 @@ include 'config.db.php';
 		 * Executes a query and returns the first row of the result as associative array.
 		 */
 		static function get_assoc_row($query) {
-			if (!isset(DB::$sqli)) return;
+			if (!isset(DB::$sqli)) die ("get_assoc_row ($query): no sqli");
 			$res=DB::$sqli->query($query);
 			if (!$res) die ("get_assoc ($query): ".DB::$sqli->error);
 			if ($row = $res->fetch_assoc()) {
@@ -98,7 +99,7 @@ include 'config.db.php';
 		 * Returns true if a query returns exactly one row.
 		 */		
 		static function check($query) {
-			if (!isset(DB::$sqli)) return;
+			if (!isset(DB::$sqli)) die ("check ($query): no sqli");
 			$res=DB::$sqli->query($query);
 			if (!$res) return false;
 			return true;

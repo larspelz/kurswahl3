@@ -22,8 +22,8 @@
 		$snr=DB::get_list('SELECT snr FROM '.$tpref.'schueler');
 	}
 	
-	$err=check($snr,'stud',$tpref); // TODO: mode=db!
-	echo $err;
-	//header( 'Location: studlist.php' );
+	$err=check($snr,'db',$tpref); 
+	//echo $err;
+	header( 'Location: studlist.php' );
 	
 ?>
