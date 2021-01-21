@@ -1,8 +1,6 @@
 <?php
 	
 	include 'getconfig.inc.php';
-
-	if (DB::sqli()==NULL) die ('edinit: no sqli');
 	
    $tpref=gettableprefix();
 	
@@ -12,7 +10,7 @@
       return $ret;
    }
 
-   // Fächerlisten laden
+   // FÃ¤cherlisten laden
    $fach_lk1=loadFach("kannLK1=1",$tpref);
    $fach_lk2=loadFach("kannLK2=1",$tpref);
    $fach_pf3=loadFach("kannPF3=1",$tpref);
@@ -29,12 +27,11 @@
 	  $fach_wahl[$t['fachkurz']][]=$t['sem'];
    }
 
-   // Prüfungsfächerwahl laden
+   // PrÃ¼fungsfÃ¤cherwahl laden
    $temp=DB::get_assoc('SELECT fachkurz,pf FROM '.$tpref."waehltpf WHERE snr='$uid'");
    $fach_pf=array();
    for ($l=0;$l<8;$l++) $fach_pf[$l]='';
  	foreach ($temp as $t) {
      $fach_pf[$t['pf']]=$t['fachkurz'];
    }
-   
 ?>

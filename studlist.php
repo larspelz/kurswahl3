@@ -33,7 +33,6 @@ include 'tools.inc.php';
 <th class="admin"><a href="studlist.php?sort=kl">Klasse</a></th>
 <th class="admin">Kurse</th>
 <th class="admin">Bearbeiten</th>
-<th class="admin">Stammdaten</th>
 <th class="admin">PDF</th>
 <?php
 $errsel='';
@@ -65,8 +64,6 @@ foreach ($res as $data) {
 		'<td class="admin" '.($data['kursadd']!=0?'style="background-color:#CCFFEE;"':'').
 		'>'.$ccount.'</td>'.
 		'<td class="admin" align="center"><a href="edit.php?num='.$snr.'">Bearbeiten</a></td>'.
-		'<td class="admin" align="center"><a href="stammdaten.php?num='.$snr.'">Edit</a> '.
-			'<a href="#" onClick="deletestudent('.$snr.');">Del</a></td>'.
 		'<td class="admin"><a href="pdf/pdf-export.php?num='.$snr.'"><img border=0 src="pdf/imgs/pdf-icon.png" alt="" /></a></td>'.
 		'<td class="admin" align="left">';
 		if ($data['kwfehler']!='ok') {

@@ -25,51 +25,13 @@ function itemjs($text,$onclick) {
 <ul id="mu">
 <?php
 	include 'getconfig.inc.php';
-   $tpref=gettableprefix();
+   	$tpref=gettableprefix();
 
 	if ($isadmin) {
 		if(stristr($_SERVER['REQUEST_URI'],"studlist.php")) {
-			//echo itemtx('Sch&uuml;lerliste');
-			//echo item('Ausgabe','#');
-			//echo '<ul id="mu">'.
-			/*echo item('Wahlliste als PDF','pdf/pdf-export.php').
-				item('CSV: 1. Semester','export.php?semno=1').
-				item('CSV: 2. Semester','export.php?semno=2').
-				item('CSV: 3. Semester','export.php?semno=3').
-				item('CSV: 4. Semester','export.php?semno=4').
-				item('CSV: Sportkurse','sportdaten.php').
-				item('CSV: Pr&uuml;fungsf&auml;cher','exportpf.php')
-				;*/
 			echo item('Exporte und Listen','listen.php');
-			//	'</ul>';
-			/*echo item('Stammdaten','#');
-			echo '<ul id="mu">'.*/
-			echo item('Neuer Sch&uuml;ler','stammdaten.php');
 			echo item('Einstellungen','einstell.php');
-			/*	item('F&auml;cher','fachadmin.php').
-				
-				echo '</ul>';
-			echo item('Pr&uuml;fen','#');
-			echo '<ul id="mu">'.*/
 			echo item('Alle pr&uuml;fen','check.php');
-			//	'</ul>';
-		}
-
-		if(stristr($_SERVER['REQUEST_URI'],"stammdaten.php")) {
-			if ($uid!="") {
-				echo itemtx('Sie bearbeiten: '.getStudName($uid,$tpref));
-			} else {
-				echo itemtx('Neuer Sch&uuml;ler');
-			}
-			echo item('Zur&uuml;ck','studlist.php#'.$uid);
-			echo itemjs ('Speichern','save();');
-			echo '<li id="savenotify" style="width:320px;" align="center">'.
-				'<b style="background-color:#DDDDDD;color:green;">keine &Auml;nderungen</b></li>'."\n";
-			/*echo item('Aufgaben','#');
-			echo '<ul id="mu">'.*/
-			echo itemjs('Passwort erneuern','pwchange('.$uid.');').
-				item('Zugang aktivieren','#');
-				//'</ul>';
 		}
 		
 		if(stristr($_SERVER['REQUEST_URI'],"fachadmin.php")) {
@@ -133,11 +95,6 @@ function itemjs($text,$onclick) {
 		}
     }
 	
-	/*if(stristr($_SERVER['REQUEST_URI'],"auswahl.php")) {
-		echo itemjs('Abmelden',"close('BLA');");
-	} else {
-		echo item('Abmelden','logout.php');
-	}*/
 	echo item ('Abmelden','logout.php');
 
 ?>

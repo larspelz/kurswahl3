@@ -1,16 +1,16 @@
 <?php
    
    function writeOptionsPF($faecher,$beleg,$pfnr) {
-      for ($i=0;$i<count($faecher);$i++) {
-	     $sel='';
-		 if (isset($beleg) && $beleg[$pfnr]==$faecher[$i]['kurz']) {
-		    $sel='selected';
-		 }
-         echo '<option value="'.$faecher[$i]['kurz'].'" '.$sel.'>'.$faecher[$i]['lang'].'</option>';
-      }
-   }
+      	for ($i=0;$i<count($faecher);$i++) {
+	    	$sel='';
+			if (isset($beleg) && $beleg[$pfnr]==$faecher[$i]['kurz']) {
+		    	$sel='selected';
+			}
+        	echo '<option value="'.$faecher[$i]['kurz'].'" '.$sel.'>'.$faecher[$i]['lang'].'</option>';
+      	}
+   	}
    
-   // Farbdefinitionen für farbliche Absetzung der Aufgabenfelder in der Grundkurswahl
+   // Farbdefinitionen fÃ¼r farbliche Absetzung der Aufgabenfelder in der Grundkurswahl
    function getAFcolor ($which) {
 		switch ($which) {
 				case 1: return '#FFC39F';
@@ -32,7 +32,9 @@ if (!isset($uid)) {
 	header( 'Location: index.php' );
 }
 
-include 'dbconnect.inc.php';
+include 'dbinterface.inc.php';
+DB::connect();
+
 include 'header.inc.php';
 include 'menu.inc.php';
 include 'edinit.inc.php';
@@ -173,7 +175,7 @@ include 'edinit.inc.php';
 		echo '<tr><td bgcolor="'.$bgcolor.
 			'">'.$fach_gk[$i]['lang'].'</td>';
 			
-		// gewählte Semester in $sem speichern
+		// gewï¿½hlte Semester in $sem speichern
 		if ((count($fach_wahl)>0) && (array_key_exists($fach_gk[$i]['kurz'],$fach_wahl))) {
 				$sem=$fach_wahl[$fach_gk[$i]['kurz']]; // $sem ist ein Array!
 			} else {
