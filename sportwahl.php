@@ -23,87 +23,88 @@ function getextra($snr,$tpref,$sem) {
 
 session_start();
 
-  	include 'dbinterface.inc.php';
-  	
-  	DB::connect();
+include 'dbinterface.inc.php';
 
-	include 'auth.inc.php';
-	include 'getconfig.inc.php';
-	$tpref=gettableprefix();
+DB::connect();
 
-	// load course description from db
-	$kuerzel=array();
-	$langname=array();
-	$hat2ls=array();
-  	$res=DB::get_assoc('SELECT kuerzel,langname,hat2ls FROM '.$tpref.'sportkurs');
-  	$k=0;
-  	foreach ($res as $data) {
-  		$kuerzel[$k]=$data['kuerzel'];
-  		$langname[$k]=$data['langname'];
-		$hat2ls[$k]=$data['hat2ls'];
-  		$k++;
-  	}
+include 'auth.inc.php';
+include 'getconfig.inc.php';
+$tpref=gettableprefix();
 
-  	// load student information
-  	if ($isadmin) {
-  		if (isset ($_POST['num'])) {
-  			// admin issued a save
-  			$uid=DB::esc($_POST['num']);
-  		} else {
-  			// admin first look
-  			if (isset($_GET['num'])) $uid=DB::esc($_GET['num']);
-  		}
-  	} else {
-  		// user loop
-	  	$uid=$_SESSION['user'];
+// load course description from db
+$kuerzel=array();
+$langname=array();
+$hat2ls=array();
+$res=DB::get_assoc('SELECT kuerzel,langname,hat2ls FROM '.$tpref.'sportkurs');
+$k=0;
+foreach ($res as $data) {
+	$kuerzel[$k]=$data['kuerzel'];
+	$langname[$k]=$data['langname'];
+	$hat2ls[$k]=$data['hat2ls'];
+	$k++;
+}
+
+// load student information
+if ($isadmin) {
+	if (isset ($_POST['num'])) {
+		// admin issued a save
+		$uid=DB::esc($_POST['num']);
+	} else {
+		// admin first look
+		if (isset($_GET['num'])) $uid=DB::esc($_GET['num']);
+	}
+} else {
+	// user loop
+	$uid=$_SESSION['user'];
+}
+
+include 'header.inc.php';
+include 'menu.inc.php';
+
+// process eventual POST data
+if (isset ($_POST['data'])) {
+	for ($i=1;$i<6;$i++){
+		$kurs=$_POST['k'.$i];
+		$ls=$_POST['ls'.$i];
+		$res=DB::get_value_or_false('SELECT * from '.$tpref."waehltsp WHERE snr='$uid' AND sem=$i");
+		$sql='';
+		if (is_string($res)) {
+			// entry already present, needs UPDATE
+			$sql='UPDATE '.$tpref."waehltsp SET kuerzel='$kurs', lstufe=$ls WHERE snr='$uid' AND sem=$i";
+		} else {
+			// entry is not present, needs INSERT
+			$sql='INSERT INTO '.$tpref."waehltsp (snr,kuerzel,sem,lstufe) VALUES ('$uid','$kurs',$i,$ls)";
+		}
+		DB::query($sql);
+	}
+	if ($_POST['ski']=='y') {
+		setextra('SK',true,$uid,$tpref,6);
+	} else {
+		setextra('SK',false,$uid,$tpref,6);
 	}
 	
-	include 'header.inc.php';
-	include 'menu.inc.php';
+	if ($_POST['exchg']!='no') {
+		setextra($_POST['exchg'],true,$uid,$tpref,10);
+	} else {
+		setextra('EXC',false,$uid,$tpref,10);
+	}
 
-  	// process eventual POST data
-  	if (isset ($_POST['data'])) {
-  		for ($i=1;$i<6;$i++){
-  			$kurs=$_POST['k'.$i];
-  			$ls=$_POST['ls'.$i];
-  			$res=DB::get_value_or_false('SELECT * from '.$tpref."waehltsp WHERE snr='$uid' AND sem=$i");
-  			$sql='';
-  			if (is_string($res)) {
-  				// entry already present, needs UPDATE
-  				$sql='UPDATE '.$tpref."waehltsp SET kuerzel='$kurs', lstufe=$ls WHERE snr='$uid' AND sem=$i";
-  			} else {
-  				// entry is not present, needs INSERT
-  				$sql='INSERT INTO '.$tpref."waehltsp (snr,kuerzel,sem,lstufe) VALUES ('$uid','$kurs',$i,$ls)";
-  			}
-			DB::query($sql);
-  		}
-  		if ($_POST['ski']=='y') {
-			setextra('SK',true,$uid,$tpref,6);
-        } else {
-			setextra('SK',false,$uid,$tpref,6);
-		}
-		
-		if ($_POST['exchg']!='no') {
-			setextra($_POST['exchg'],true,$uid,$tpref,10);
-  		} else {
-  			setextra('EXC',false,$uid,$tpref,10);
-  		}
-
-		if ($_POST['ens']!='no') {
-			setextra($_POST['ens'],true,$uid,$tpref,11);
-  		} else {
-  			setextra($_POST['ens'],false,$uid,$tpref,11);
-  		}
-		
-		if ($_POST['chi']!='no') {
-			setextra($_POST['chi'],true,$uid,$tpref,12);
-  		} else {
-  			setextra($_POST['chi'],false,$uid,$tpref,12);
-  		}
-		
-  	}
+	if ($_POST['ens']!='no') {
+		setextra($_POST['ens'],true,$uid,$tpref,11);
+	} else {
+		setextra($_POST['ens'],false,$uid,$tpref,11);
+	}
+	
+	if ($_POST['chi']!='no') {
+		setextra($_POST['chi'],true,$uid,$tpref,12);
+	} else {
+		setextra($_POST['chi'],false,$uid,$tpref,12);
+	}
+	
+}
 ?>
 <center>
+<b><font color="red">Bitte klicken Sie nach dem Eintragen auf Speichern!</font></b><br><br>
 <form action="sportwahl.php" name="f" method="POST">
 <div style="border: 2px solid #ff0000; padding:5px; display:table;width:auto;">
 <span style="position:relative; top:-10px; margin-left: 20px; background-color:#fff;padding:0 10px;" >
@@ -113,8 +114,7 @@ Sportkurse
 <?php 
 	if (!$isadmin) { echo ("
 		<br>Bitte w&auml;hlen Sie <b>vier</b> Sportkurse, die Sie belegen m&ouml;chten,
-		sowie <b>einen</b> Kurs als Alternative.<br> <font color=\"red\">Bitte klicken 
-		Sie nach dem Eintragen auf Speichern!</font>");
+		sowie <b>einen</b> Kurs als Alternative.");
 	}
 	
   	// load student's choice from db

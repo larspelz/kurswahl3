@@ -6,6 +6,9 @@ include 'getconfig.inc.php'; ?>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"/>
+<meta http-equiv="Pragma" content="no-cache"/>
+<meta http-equiv="Expires" content="0"/>
 <link href="kwstyle.css" type="text/css" rel="stylesheet" />
 <title>Kurswahl
 <?php 
@@ -47,7 +50,7 @@ include 'getconfig.inc.php'; ?>
 
 	// Javascript-Daten initialisieren
 	if(stristr($_SERVER['REQUEST_URI'],"auswahl.php") || stristr($_SERVER['REQUEST_URI'],"edit.php")) {
-		// Fächer-Array dynamisch erzeugen
+		// Fï¿½cher-Array dynamisch erzeugen
 		echo '<script type="text/javascript">';
 		$tpref=gettableprefix();
 		$sql='SELECT ord FROM '.$tpref.'fach WHERE kannGK=1 ORDER BY ord';

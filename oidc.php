@@ -1,13 +1,9 @@
 <?php
 
 session_start();
-
-if (isset($_SESSION['user']) && isset($_SESSION['admin'])) {
-	if ($_SESSION['admin'])
-		header( 'Location: studlist.php' );
-	else 
-		header( 'Location: auswahl.php' );
-	exit;
+if (isset($_SESSION['user'])) {
+	session_destroy();
+	session_start();
 }
 
 require __DIR__ . '/vendor/autoload.php';
@@ -28,6 +24,7 @@ try {
 	$authresult = $oidc->authenticate();
 } catch(Exception $e) {
 	echo "Fehler bei der IServ-Authentifizierung: <br />\n".$e;
+	exit;
 }
 
 if($authresult == true) {
@@ -45,7 +42,7 @@ if($authresult == true) {
 	if ($admin || isset($tgrp)) {
 		if (!$admin) {
 			// check whether student exists and create one if not available
-			include 'dbinterface.inc.php';
+			/*include 'dbinterface.inc.php';
 			include 'getconfig.inc.php';
 			$tpref=gettableprefix();
 			DB::connect();
@@ -54,11 +51,11 @@ if($authresult == true) {
 				$famname=$userinfo->family_name;
 				$givname=$userinfo->given_name;
 				DB::query("INSERT INTO ".$tpref."schueler (snr,name,vorname,prof1,prof2,klasse,kwfehler,kursadd) VALUES 
-			}
+			}*/
 		}
 		$_SESSION['school']='hum';
 		$_SESSION['year']=date('y');
-		$_SESSION['admin']=$admin;
+		if ($admin) $_SESSION['admin']='yes';
 		$_SESSION['user']=$user;
 		if ($admin)
 			header( 'Location: studlist.php' );

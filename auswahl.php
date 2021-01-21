@@ -10,7 +10,7 @@
       }
    }
 
-   // Farbdefinitionen für farbliche Absetzung der Aufgabenfelder in der Grundkurswahl
+   // Farbdefinitionen fÃ¼r farbliche Absetzung der Aufgabenfelder in der Grundkurswahl
    function getAFcolor ($which) {
 		switch ($which) {
 				case 1: return '#FFC39F';
@@ -34,7 +34,10 @@
 			exit();
 		}
 
-   }    
+   }  
+
+   if (!isset($uid))
+   	$uid=$_SESSION['user'];
    
    DB::connect();
 
@@ -183,7 +186,7 @@
 		  for ($i=0;$i<count($fach_gk);$i++) {
 
 			// bei Wechsel des Aufgabenfeldes (ord[0])
-			// Tabelle beenden und neue öffnen
+			// Tabelle beenden und neue ï¿½ffnen
 		    $o=$fach_gk[$i]['ord'][0];
 			if (($i>0) && ($o!=$oo)) echo '</tr></table></td>'.
 					'<td valign="top"><table cellpadding="3"><tr>';
@@ -200,7 +203,7 @@
 
 			// Erzeugen des Auswahlfeldes --------
 
-			// deaktiviertes Feld erzeugen, falls als PF gewählt
+			// deaktiviertes Feld erzeugen, falls als PF gewï¿½hlt
 			echo '<td><select id="G'.$fach_gk[$i]['kurz'].'"'.
 					        ' name="G'.$fach_gk[$i]['ord'].'"'.
 							' onChange="changegk(\''.$fach_gk[$i]['lang'].'\','.
@@ -212,21 +215,21 @@
 				unset($sem);
 			}
 
-			// Wählbarkeit und ausgewählte Option des Faches auswerten
+			// Wï¿½hlbarkeit und ausgewï¿½hlte Option des Faches auswerten
 			$options=array();
 			$waehlbar=explode(',',$fach_gk[$i]['semwaehlbar']);
 
-			// Falls keine Wahl vorliegt, "kein" als ausgewählte Option einfügen
-			// sonst als wählbare Option einfügen
+			// Falls keine Wahl vorliegt, "kein" als ausgewï¿½hlte Option einfï¿½gen
+			// sonst als wï¿½hlbare Option einfï¿½gen
 			if (!isset($sem))
 				$options[]='<option selected value="no">kein</option>';
 			else
 				$options[]='<option value="no">kein</option>';
 
-			// Optionen erzeugen, gewählte Option (falls vorhanden) voreinstellen
+			// Optionen erzeugen, gewï¿½hlte Option (falls vorhanden) voreinstellen
 			for ($k=0;$k<count($waehlbar);$k++) {
 				// HACK: Wie kann das hier verallgemeinern?
-				// 1+2 Semester gewählt
+				// 1+2 Semester gewï¿½hlt
 				if ($waehlbar[$k]=='12' ) {
 					if ( isset($sem) && in_array('1',$sem) && !in_array('4',$sem) ) {
 					     $options[]='<option selected value="12">1. & 2. Sem.</option>';
@@ -234,7 +237,7 @@
 					     $options[]='<option value="12">1. & 2. Sem.</option>';
 					}
 				}
-				// 3+4 Semester gewählt
+				// 3+4 Semester gewï¿½hlt
 				if ($waehlbar[$k]=='34' ) {
 					if ( isset($sem) && in_array('4',$sem) && !in_array('1',$sem) ) {
 					     $options[]='<option selected value="34">3. & 4. Sem.</option>';
@@ -242,7 +245,7 @@
 					     $options[]='<option value="34">3. & 4. Sem.</option>';
 					}
 				}
-				// alle Semester gewählt
+				// alle Semester gewï¿½hlt
 				if ($waehlbar[$k]=='44' ) {
 					if ( isset($sem) && in_array('1',$sem) && in_array('4',$sem) ) {
 					     $options[]='<option selected value="44">1.-4. Sem.</option>';
@@ -250,7 +253,7 @@
 					     $options[]='<option value="44">1.-4. Sem.</option>';
 					}
 				}
-				// für zwei Semester gewählt
+				// fï¿½r zwei Semester gewï¿½hlt
 				if ($waehlbar[$k]=='22' ) {
 					if ( isset($sem) && in_array('1',$sem) && in_array('2',$sem) ) {
 					     $options[]='<option selected value="22">zwei Sem.</option>';
@@ -258,7 +261,7 @@
 					     $options[]='<option value="22">zwei Sem.</option>';
 					}
 				}
-				// für ein Semester gewählt
+				// fï¿½r ein Semester gewï¿½hlt
 				if ($waehlbar[$k]=='11' ) {
 					if ( isset($sem) && in_array('1',$sem) && !in_array('2',$sem) ) {
 					     $options[]='<option selected value="11">ein Sem.</option>';
@@ -266,7 +269,7 @@
 					     $options[]='<option value="11">ein Sem.</option>';
 					}
 				}
-				// 2+3 Semester gewählt
+				// 2+3 Semester gewï¿½hlt
 				if ($waehlbar[$k]=='23' ) {
 					if ( isset($sem) && in_array('2',$sem) && !in_array('1',$sem) ) {
 					     $options[]='<option selected value="23">2. & 3. Sem.</option>';
@@ -274,7 +277,7 @@
 					     $options[]='<option value="23">2. & 3. Sem.</option>';
 					}
 				}
-				// einzelnes Semester gewählt
+				// einzelnes Semester gewï¿½hlt
 				for ($l=1;$l<5;$l++) {
 					if ($waehlbar[$k]==$l ) {
 						if ( isset($sem) && in_array($l,$sem) && count($sem)<2 ) {

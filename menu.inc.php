@@ -71,10 +71,10 @@ function itemjs($text,$onclick) {
 		echo itemjs('Speichern','save();');
 
 		if ($isadmin) {
-			echo item ('Ausland, Sport, Mail, AGs','sportwahl.php?num='.$uid);
+			echo item ('Ausland, Sport, AGs','sportwahl.php?num='.$uid);
 			echo item ('PDF erstellen','pdf/pdf-export.php?num='.$uid);
 		} else {
-			echo item ('Ausland, Sport, Mail, AGs','sportwahl.php');
+			echo item ('Ausland, Sport, AGs','sportwahl.php');
 		}
     }
 
