@@ -95,12 +95,6 @@ if (isset ($_POST['data'])) {
 		setextra($_POST['ens'],false,$uid,$tpref,11);
 	}
 	
-	if ($_POST['chi']!='no') {
-		setextra($_POST['chi'],true,$uid,$tpref,12);
-	} else {
-		setextra($_POST['chi'],false,$uid,$tpref,12);
-	}
-	
 }
 ?>
 <center>
@@ -209,7 +203,7 @@ Auslandsaufenthalt
 </td><td>
 
 <div style="border: 2px solid darkblue; padding:5px; display:table; width:auto;">
-<span style="position:relative; top:-10px; margin-left: 20px; background-color:#fff;padding:0 10px;" >
+<span style="position:relative; top:-10px; margin-left: 20px; background-color:#fff;padding:0 10px;">
 Musik-AGs
 </span>
 <br>Falls Sie möchten, können Sie hier Ihre<br> Teilnahme an einer der Musik-AGs wählen: <select name="ens">
@@ -233,29 +227,6 @@ Musik-AGs
 </select>
 
 </div>
-</td></tr><tr><td>
-<div style="border: 2px solid darkblue; padding:5px; display:table; width:auto;">
-<span style="position:relative; top:-10px; margin-left: 20px; background-color:#fff;padding:0 10px;" >
-Leistungskurs Chinesisch
-</span>
-<br>Falls ein Leistungskurs Chinesisch eingerichtet wird,<br>m&ouml;chten Sie dann daran teilnehmen?
-<?php $chi=getextra($uid,$tpref,12); ?>
-<select name="chi">
-<option value="no" 
-<?php
-	if ($chi=='no') echo 'selected';
-?>>-- Ausw&auml;hlen --</option>
-<option value="CHY" 
-<?php
-	if ($chi=='CHY') echo 'selected';
-?>>Ja</option>
-<option value="CHN" 
-<?php
-	if ($chi=='CHN') echo 'selected';
-?>>Nein</option>
-</select>
-</div>
-</td><td>&nbsp;
 </td></tr></table>
 <input type="hidden" name="data" value="nothing">
 <?php if ($isadmin) echo '<input type="hidden" name="num" value="'.$uid.'">' ?>
