@@ -7,6 +7,7 @@ include 'dbinterface.inc.php';
 DB::connect();
 
 include 'auth.inc.php';
+include 'getconfig.inc.php';
 
 $tpref=gettableprefix();
 

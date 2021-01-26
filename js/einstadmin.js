@@ -20,7 +20,7 @@ if (!axobj) {
 function encodeForm() {
 	frm=document.forms['settings'];
 	fdata="pdf_footer="+frm.pdf_footer.value;
-	fdata+="&sys_motd="+frm.sys_motd.value;
+	//fdata+="&sys_motd="+frm.sys_motd.value;
 	//fdata+="&sys_school="+frm.sys_school.value;
 	return fdata;
 }
