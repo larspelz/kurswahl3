@@ -1,6 +1,7 @@
 <?php
 
-	include 'dbconnect.inc.php';
+	include 'dbinterface.inc.php';
+	DB::connect();
 	
 	include 'auth.inc.php';
 	
@@ -14,22 +15,16 @@
 	}
 	
 	header('Content-type: text/ascii');
-	header('Content-Disposition: attachment; filename="pruefungsfaecher.txt"');
+	header('Content-Disposition: attachment; filename="pruefungsfaecher.sql"');
 	
-	$stud=array();
-	$res=mysql_query ('SELECT snr FROM '.$tpref.'schueler');
-	while ($data=mysql_fetch_assoc($res)) {
-		$stud[]=$data['snr'];
-	}
+	$stud=DB::get_list ('SELECT snr FROM '.$tpref.'schueler');
 	
 	$pf=array();
 	for ($i=0;$i<count($stud);$i++) {
 		$pf[$stud[$i]]=array();
 		//echo $stud[$i].': ';
-		$res=mysql_query('SELECT fachkurz,pf FROM '.$tpref.'waehltpf WHERE snr='.$stud[$i].' ORDER BY pf');
-		$num=mysql_num_rows($res);
-		for ($j=0;$j<$num;$j++) {
-			$data=mysql_fetch_assoc($res);
+		$infos=DB::get_assoc('SELECT fachkurz,pf FROM '.$tpref."waehltpf WHERE snr='$stud[$i]' ORDER BY pf");
+		foreach ($infos as $data) {
 			if (($data['pf']>=1 && $data['pf']<=5) || $data['pf']==7)
 				//echo ' -- '.$data['pf'].': '.$data['fachkurz'];
 				$pf[$stud[$i]][$data['pf']]=$data['fachkurz'];

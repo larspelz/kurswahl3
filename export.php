@@ -1,6 +1,14 @@
 <?php
 
-	include 'dbconnect.inc.php';
+	function arr2csv($arr) {
+		for($i=0;$i<count($arr);$i++)
+			$arr[$i]= '"'.$arr[$i].'"';
+		
+		return implode (';',$arr)."\n";
+	}
+
+	include 'dbinterface.inc.php';
+	DB::connect();
 	
 	include 'auth.inc.php';
 	
@@ -14,40 +22,34 @@
 	
 	if (isset($_GET['semno'])) $semno=$_GET['semno']; else $semno=1;
 	
-	$res=mysql_query('SELECT snr,fachkurz FROM '.$tpref.'waehlt WHERE sem='.$semno." AND (NOT fachkurz='SP')");
+	$res=DB::get_assoc('SELECT snr,fachkurz FROM '.$tpref.'waehlt WHERE sem='.$semno." AND (NOT fachkurz='SP')");
 	
 	// Jahrgang setzen
 	if ($semno<3) $jg=12; else $jg=13;
 	
-	while ($data=mysql_fetch_assoc($res)) {
+	foreach ($res as $data) {
 	
 		// Bei Seminarkursen muss kein G vorangestellt werden
 		$kursname=$data['fachkurz'];
 		$kursname='G'.$kursname;
 		
 		$arr = array($data['snr'],'',$kursname.'1',$data['fachkurz'],$jg,'',$data['snr'],'','','','','','');
-		for($i=0;$i<12;$i++){
-			echo "\"".$arr[$i]."\";";
-		}
-		echo "\"".$arr[12]."\"\n";
+		echo arr2csv($arr);
 	}
-	// Prüfungsfächer exportieren, werden immer für 4 Semester gewählt und sind nicht in
+	// PrÃ¼fungsfÃ¤cher exportieren, werden immer fÃ¼r 4 Semester gewÃ¤hlt und sind nicht in
 	// waehlt-Tabelle gespeichert
 	// TODO: auch bei Folgesemestern exportieren?
 	
-	$res=mysql_query('SELECT snr,fachkurz,pf FROM '.$tpref.'waehltpf WHERE pf IN (1,2,3,4,7)');
+	$res=DB::get_assoc('SELECT snr,fachkurz,pf FROM '.$tpref.'waehltpf WHERE pf IN (1,2,3,4,7)');
 	
-	while ($data=mysql_fetch_assoc($res)) {
+	foreach ($res as $data) {
 		$kursname='G'.$data['fachkurz'].'1';
 		if ($data['pf']==1 || $data['pf']==2 || $data['pf']==7) {
 			if ($data['fachkurz']=='no') continue;
 			$kursname[0]='L';
 		}
 		$arr = array($data['snr'],'',$kursname,$data['fachkurz'],$jg,'',$data['snr'],'','','','','','');
-		for($i=0;$i<12;$i++){
-			echo "\"".$arr[$i]."\";";
-		}
-		echo "\"".$arr[12]."\"\n";
+		echo arr2csv($arr);
 	}
 
 ?>

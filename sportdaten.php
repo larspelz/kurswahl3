@@ -3,30 +3,26 @@
 header('Content-type: text/csv');
 header('Content-Disposition: attachment; filename="sportkurse.csv"');
 
-include 'dbconnect.inc.php';
+include 'dbinterface.inc.php';
+DB::connect();
+
 include 'auth.inc.php';
 include 'getconfig.inc.php';
 $tpref=gettableprefix();
 
-// Schülernummern laden
-$id=mysql_query('SELECT DISTINCT sNummer FROM '.$tpref.'waehltsp');
-$snr=array();
-while($data = mysql_fetch_assoc($id)) {
-	$snr[]=$data['sNummer'];
-}
+// SchÃ¼lernummern laden
+$snr=DB::get_list('SELECT DISTINCT snr FROM '.$tpref.'waehltsp');
 
 // Ausgabezeilen erzeugen
 foreach ($snr as $n) {
 	
-	$id=mysql_query('SELECT kuerzel,lstufe FROM '.$tpref.'waehltsp WHERE sNummer='.$n.
+	$infos=DB::get_assoc('SELECT kuerzel,lstufe FROM '.$tpref."waehltsp WHERE snr='$n'".
 		" AND kuerzel NOT IN ('ORC','JAZ','CHR','EX1','EX2','EX3','EX4','EXC')");
 	
 	$kurse=array();
-	while ($data=mysql_fetch_assoc($id)) {
+	foreach ($infos as $data) {
 		$kurse[]='S'.$data['lstufe'].$data['kuerzel'].'1';
 	}
-
-	$kursname='S'.$data[2].$data[1].'1';
 	
 	// Erzeugen der Ausgabezeile
 	$arr = array($n,'','','SP','12','','','','','',implode('~',$kurse),'','');

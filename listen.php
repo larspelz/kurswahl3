@@ -1,6 +1,8 @@
 <?php
 
-	include 'dbconnect.inc.php';
+	include 'dbinterface.inc.php';
+	DB::connect();
+
 	include 'auth.inc.php';
 	include 'header.inc.php';
 	include 'menu.inc.php';
@@ -20,7 +22,6 @@
 <li><a href="semdiff.php?sem=12">Excel: Differenzliste Sem. 1/2</a>
 <li><a href="semdiff.php?sem=23">Excel: Differenzliste Sem. 2/3</a>
 <li><a href="semdiff.php?sem=34">Excel: Differenzliste Sem. 3/4</a></li><br><br>
-<li><a href="pwgen.php?mode=list">Schüler-Passwort-Liste</a>
 </ul>
 <br><br>
 </div>
