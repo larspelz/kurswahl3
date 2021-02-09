@@ -94,6 +94,18 @@ if (isset ($_POST['data'])) {
 	} else {
 		setextra($_POST['ens'],false,$uid,$tpref,11);
 	}
+
+	if ($_POST['op1']!='no') {
+		setextra($_POST['op1'],true,$uid,$tpref,12);
+	} else {
+		setextra($_POST['op1'],false,$uid,$tpref,12);
+	}
+
+	if ($_POST['op2']!='no') {
+		setextra($_POST['op2'],true,$uid,$tpref,13);
+	} else {
+		setextra($_POST['op2'],false,$uid,$tpref,13);
+	}
 	
 }
 ?>
@@ -101,7 +113,7 @@ if (isset ($_POST['data'])) {
 <b><font color="red">Bitte klicken Sie nach dem Eintragen auf Speichern!</font></b><br><br>
 <form action="sportwahl.php" name="f" method="POST">
 <div style="border: 2px solid #ff0000; padding:5px; display:table;width:auto;">
-<span style="position:relative; top:-10px; margin-left: 20px; background-color:#fff;padding:0 10px;" >
+<span style="position:relative; top:-10px; margin-left: 20px; background-color:#fff;padding:0 10px;font-weight:bold;" >
 Sportkurse
 </span>
 
@@ -119,8 +131,8 @@ Sportkurse
   	}
 
   	// build form content
-?>
-<table border="1" cellpadding="7">
+?><center>
+<table border="1" cellpadding="7" width="800px">
 <tr><td>1. Kurs</td><td>2. Kurs</td><td>3. Kurs</td><td>4. Kurs</td><td>Alternative</td></tr>
 <tr>
 <?php
@@ -146,7 +158,7 @@ Sportkurse
 	<option';
 		// detect chosen grading level
 		if (isset($lstufe)) 
-			if ($lstufe[$i]=='2') echo 'selected';
+			if ($lstufe[$i]=='2') echo ' selected';
 	echo '>2</option></select></td>';
 	}
 ?>
@@ -161,7 +173,7 @@ M&ouml;chten Sie an der Skifahrt teilnehmen? &nbsp;&nbsp;
    echo ' value="y">Ja</option>';
 ?>
 </select>
-</td></tr></table>
+</td></tr></table></center>
 
 <br>Bitte beachten:<br>
 Der Sportkurs <b>Rudern</b> ist mit der Teilnahme an Wochenendterminen verbunden.<br>Teilnehmer m&uuml;ssen
@@ -170,64 +182,105 @@ mindestens &uuml;ber das Schwimmabzeichen Bronze (Freischwimmer) verf&uuml;gen.<
 Der Sportkurs <b>Klettern</b> findet an ausgew&auml;hlten Terminen am Samstag statt. Es ist ein Unkostenbeitrag zu entrichten.
 
 </div> <!-- Sportkurswahl Ende -->
-<table><tr><td>
-<div style="border: 2px solid darkblue; padding:5px; display:table; width:auto;">
-<span style="position:relative; top:-10px; margin-left: 20px; background-color:#fff;padding:0 10px;" >
-Auslandsaufenthalt
-</span>
-<br>In welchen Semestern haben Sie vor ins Ausland <br>zu gehen? <select name="exchg">
-<option value="no">kein</option>
-<option value="EX1"
-<?php
-	if (getextra($uid,$tpref,10)=='EX1') echo 'selected';
-?>
->nur im 1. Semester</option>
-<option value="EX2"
-<?php
-	if (getextra($uid,$tpref,10)=='EX2') echo 'selected';
-?>
->nur im 2. Semester</option>
-<option value="EX3"
-<?php
-	if (getextra($uid,$tpref,10)=='EX3') echo 'selected';
-?>
->im 1. & 2. Semester</option>
-<option value="EX4"
-<?php
-	if (getextra($uid,$tpref,10)=='EX4') echo 'selected';
-?>
->sp&auml;ter als 2. Semester</option>
-</select>
-</div>
+<table>
+	<tr>
+		<td width="450px">
+			<div style="border: 2px solid darkblue; padding:5px; display:table; width:auto;">
+				<span style="position:relative; top:-10px; margin-left: 20px; background-color:#fff;padding:0 10px;font-weight:bold;" >
+					Auslandsaufenthalt
+				</span>
+				<br>In welchen Semestern haben Sie vor ins Ausland zu gehen?<br>
+				<select name="exchg">
+					<option value="no">kein</option>
+					<option value="EX1"
+						<?php if (getextra($uid,$tpref,10)=='EX1') echo 'selected'; ?>
+					>nur im 1. Semester</option>
+					<option value="EX2"
+						<?php if (getextra($uid,$tpref,10)=='EX2') echo 'selected'; ?>
+					>nur im 2. Semester</option>
+					<option value="EX3"
+						<?php if (getextra($uid,$tpref,10)=='EX3') echo 'selected'; ?>
+					>im 1. & 2. Semester</option>
+					<option value="EX4"
+						<?php if (getextra($uid,$tpref,10)=='EX4') echo 'selected'; ?>
+					>sp&auml;ter als 2. Semester</option>
+				</select>
+			</div>
+		</td>
+		<td width="450px">
+			<div style="border: 2px solid darkblue; padding:5px; display:table; width:auto;">
+				<span style="position:relative; top:-10px; margin-left: 20px; background-color:#fff;padding:0 10px;font-weight:bold;">
+					Musik-AGs
+				</span>
+				<br>Falls Sie möchten, können Sie hier Ihre<br> Teilnahme an einer der Musik-AGs wählen: 
+				<select name="ens">
+					<option value="no">keine AG-Teilnahme</option>
+					<?php $ens=getextra($uid,$tpref,11); ?>
+					<option value="ORC"
+						<?php if ($ens=='ORC') echo 'selected'; ?>
+					>Orchester</option>
+					<option value="JAZ"
+						<?php if ($ens=='JAZ') echo 'selected'; ?>
+					>Jazz-Band</option>
+					<option value="CHR"
+						<?php if ($ens=='CHR') echo 'selected'; ?>
+					>Chor</option>
+				</select>
+			</div>
+		</td>
+	</tr>
+	<tr>
+		<td width="450px">
+			<div style="border: 2px solid darkblue; padding:5px; display:table; width:auto;">
+				<span style="position:relative; top:-10px; margin-left: 20px; background-color:#fff;padding:0 10px;font-weight:bold;">
+				Angebot O10+ 1. Halbjahr
+				</span>
+				<br>Möchten Sie an dem Vertiefungs- und Praxisangebot O10+ im <i>1. Halbjahr</i> teilnehmen?<br>
+				<select name="op1">
+					<option value="no">kein O10+</option>
+						<?php $ens=getextra($uid,$tpref,12); ?>
+					<option value="AU1"
+						<?php if ($ens=='AU1') echo 'selected'; ?>
+					>Auslandsaufenthalt</option>
+					<option value="BP1"
+						<?php if ($ens=='BP1') echo 'selected'; ?>
+					>Betriebliche Praxis</option>
+					<option value="DB1"
+						<?php if ($ens=='DB1') echo 'selected'; ?>
+					>Digitale Bildung</option>
+					<option value="FV1"
+						<?php if ($ens=='FV1') echo 'selected'; ?>
+					>Fachwissenschaftliche Vertiefung</option>
+				</select>
+			</div>
+		</td>
+		<td width="450px">
+			<div style="border: 2px solid darkblue; padding:5px; display:table; width:auto;">
+				<span style="position:relative; top:-10px; margin-left: 20px; background-color:#fff;padding:0 10px;font-weight:bold;">
+					Angebot O10+ 2. Halbjahr
+				</span>
+				<br>Möchten Sie an dem Vertiefungs- und Praxisangebot O10+ im <i>2. Halbjahr</i> teilnehmen?<br>
+				<select name="op2">
+					<option value="no">kein O10+</option>
+						<?php $ens=getextra($uid,$tpref,13); ?>
+					<option value="AU2"
+					<?php if ($ens=='AU2') echo 'selected'; ?>
+					>Auslandsaufenthalt</option>
+					<option value="BP2"
+						<?php if ($ens=='BP2') echo 'selected'; ?>
+					>Betriebliche Praxis</option>
+					<option value="DB2"
+						<?php if ($ens=='DB2') echo 'selected'; ?>
+					>Digitale Bildung</option>
+					<option value="FV2"
+						<?php if ($ens=='FV2') echo 'selected'; ?>
+					>Fachwissenschaftliche Vertiefung</option>
+				</select>
 
-</td><td>
-
-<div style="border: 2px solid darkblue; padding:5px; display:table; width:auto;">
-<span style="position:relative; top:-10px; margin-left: 20px; background-color:#fff;padding:0 10px;">
-Musik-AGs
-</span>
-<br>Falls Sie möchten, können Sie hier Ihre<br> Teilnahme an einer der Musik-AGs wählen: <select name="ens">
-<option value="no">keine AG-Teilnahme</option>
-<?php $ens=getextra($uid,$tpref,11); ?>
-<option value="ORC"
-<?php
-	if ($ens=='ORC') echo 'selected';
-?>
->Orchester</option>
-<option value="JAZ"
-<?php
-	if ($ens=='JAZ') echo 'selected';
-?>
->Jazz-Band</option>
-<option value="CHR"
-<?php
-	if ($ens=='CHR') echo 'selected';
-?>
->Chor</option>
-</select>
-
-</div>
-</td></tr></table>
+			</div>
+		</td>
+	</tr>
+</table>
 <input type="hidden" name="data" value="nothing">
 <?php if ($isadmin) echo '<input type="hidden" name="num" value="'.$uid.'">' ?>
 </form>
