@@ -184,35 +184,12 @@ Der Sportkurs <b>Klettern</b> findet an ausgew&auml;hlten Terminen am Samstag st
 </div> <!-- Sportkurswahl Ende -->
 <table>
 	<tr>
-		<td width="450px">
-			<div style="border: 2px solid darkblue; padding:5px; display:table; width:auto;">
-				<span style="position:relative; top:-10px; margin-left: 20px; background-color:#fff;padding:0 10px;font-weight:bold;" >
-					Auslandsaufenthalt
-				</span>
-				<br>In welchen Semestern haben Sie vor ins Ausland zu gehen?<br>
-				<select name="exchg">
-					<option value="no">kein</option>
-					<option value="EX1"
-						<?php if (getextra($uid,$tpref,10)=='EX1') echo 'selected'; ?>
-					>nur im 1. Semester</option>
-					<option value="EX2"
-						<?php if (getextra($uid,$tpref,10)=='EX2') echo 'selected'; ?>
-					>nur im 2. Semester</option>
-					<option value="EX3"
-						<?php if (getextra($uid,$tpref,10)=='EX3') echo 'selected'; ?>
-					>im 1. & 2. Semester</option>
-					<option value="EX4"
-						<?php if (getextra($uid,$tpref,10)=='EX4') echo 'selected'; ?>
-					>sp&auml;ter als 2. Semester</option>
-				</select>
-			</div>
-		</td>
-		<td width="450px">
-			<div style="border: 2px solid darkblue; padding:5px; display:table; width:auto;">
+		<td colspan="2">
+			<div style="border: 2px solid darkblue; padding:5px;">
 				<span style="position:relative; top:-10px; margin-left: 20px; background-color:#fff;padding:0 10px;font-weight:bold;">
 					Musik-AGs
 				</span>
-				<br>Falls Sie möchten, können Sie hier Ihre<br> Teilnahme an einer der Musik-AGs wählen: 
+				<br>Falls Sie möchten, können Sie hier Ihre Teilnahme an einer der Musik-AGs wählen: <br>
 				<select name="ens">
 					<option value="no">keine AG-Teilnahme</option>
 					<?php $ens=getextra($uid,$tpref,11); ?>
@@ -231,7 +208,7 @@ Der Sportkurs <b>Klettern</b> findet an ausgew&auml;hlten Terminen am Samstag st
 	</tr>
 	<tr>
 		<td width="450px">
-			<div style="border: 2px solid darkblue; padding:5px; display:table; width:auto;">
+			<div style="border: 2px solid darkblue; padding:5px;">
 				<span style="position:relative; top:-10px; margin-left: 20px; background-color:#fff;padding:0 10px;font-weight:bold;">
 				Angebot O10+ 1. Halbjahr
 				</span>
@@ -255,7 +232,7 @@ Der Sportkurs <b>Klettern</b> findet an ausgew&auml;hlten Terminen am Samstag st
 			</div>
 		</td>
 		<td width="450px">
-			<div style="border: 2px solid darkblue; padding:5px; display:table; width:auto;">
+			<div style="border: 2px solid darkblue; padding:5px;">
 				<span style="position:relative; top:-10px; margin-left: 20px; background-color:#fff;padding:0 10px;font-weight:bold;">
 					Angebot O10+ 2. Halbjahr
 				</span>

@@ -38,6 +38,8 @@ if($authresult == true) {
 	foreach ($grps as $g) {
 		if ($g->act=='admins') $admin=true;
 		if (substr($g->act,0,9)=='klasse.10') $tgrp=substr($g->act,6,3);
+		if (substr($g->act,0,10)=='klasse.neu') $tgrp=substr($g->act,6,3);
+		if (substr($g->act,0,10)=='klasse.xxx') $tgrp=substr($g->act,6,3);
 	}
 	if ($admin || isset($tgrp)) {
 		if (!$admin) {
