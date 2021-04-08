@@ -1,22 +1,23 @@
 [
     {
         "name": "jumbojett/openid-connect-php",
-        "version": "v0.9.0",
-        "version_normalized": "0.9.0.0",
+        "version": "v0.9.2",
+        "version_normalized": "0.9.2.0",
         "source": {
             "type": "git",
             "url": "https://github.com/jumbojett/OpenID-Connect-PHP.git",
-            "reference": "87eefea40abd9cea0290aa9b6cdb314fd0037fe2"
+            "reference": "4f95102af87f86c43e8191ec6e90d9f35ed1ce5f"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/jumbojett/OpenID-Connect-PHP/zipball/87eefea40abd9cea0290aa9b6cdb314fd0037fe2",
-            "reference": "87eefea40abd9cea0290aa9b6cdb314fd0037fe2",
+            "url": "https://api.github.com/repos/jumbojett/OpenID-Connect-PHP/zipball/4f95102af87f86c43e8191ec6e90d9f35ed1ce5f",
+            "reference": "4f95102af87f86c43e8191ec6e90d9f35ed1ce5f",
             "shasum": ""
         },
         "require": {
             "ext-curl": "*",
             "ext-json": "*",
+            "paragonie/random_compat": ">=2",
             "php": ">=5.4",
             "phpseclib/phpseclib": "~2.0"
         },
@@ -24,7 +25,7 @@
             "phpunit/phpunit": "^4.8",
             "roave/security-advisories": "dev-master"
         },
-        "time": "2020-03-09T13:26:39+00:00",
+        "time": "2020-11-16T14:48:22+00:00",
         "type": "library",
         "installation-source": "dist",
         "autoload": {
@@ -39,18 +40,65 @@
         "description": "Bare-bones OpenID Connect client"
     },
     {
-        "name": "phpseclib/phpseclib",
-        "version": "2.0.27",
-        "version_normalized": "2.0.27.0",
+        "name": "paragonie/random_compat",
+        "version": "v9.99.100",
+        "version_normalized": "9.99.100.0",
         "source": {
             "type": "git",
-            "url": "https://github.com/phpseclib/phpseclib.git",
-            "reference": "34620af4df7d1988d8f0d7e91f6c8a3bf931d8dc"
+            "url": "https://github.com/paragonie/random_compat.git",
+            "reference": "996434e5492cb4c3edcb9168db6fbb1359ef965a"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/phpseclib/phpseclib/zipball/34620af4df7d1988d8f0d7e91f6c8a3bf931d8dc",
-            "reference": "34620af4df7d1988d8f0d7e91f6c8a3bf931d8dc",
+            "url": "https://api.github.com/repos/paragonie/random_compat/zipball/996434e5492cb4c3edcb9168db6fbb1359ef965a",
+            "reference": "996434e5492cb4c3edcb9168db6fbb1359ef965a",
+            "shasum": ""
+        },
+        "require": {
+            "php": ">= 7"
+        },
+        "require-dev": {
+            "phpunit/phpunit": "4.*|5.*",
+            "vimeo/psalm": "^1"
+        },
+        "suggest": {
+            "ext-libsodium": "Provides a modern crypto API that can be used to generate random bytes."
+        },
+        "time": "2020-10-15T08:29:30+00:00",
+        "type": "library",
+        "installation-source": "dist",
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Paragon Initiative Enterprises",
+                "email": "security@paragonie.com",
+                "homepage": "https://paragonie.com"
+            }
+        ],
+        "description": "PHP 5.x polyfill for random_bytes() and random_int() from PHP 7",
+        "keywords": [
+            "csprng",
+            "polyfill",
+            "pseudorandom",
+            "random"
+        ]
+    },
+    {
+        "name": "phpseclib/phpseclib",
+        "version": "2.0.31",
+        "version_normalized": "2.0.31.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/phpseclib/phpseclib.git",
+            "reference": "233a920cb38636a43b18d428f9a8db1f0a1a08f4"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/phpseclib/phpseclib/zipball/233a920cb38636a43b18d428f9a8db1f0a1a08f4",
+            "reference": "233a920cb38636a43b18d428f9a8db1f0a1a08f4",
             "shasum": ""
         },
         "require": {
@@ -58,8 +106,7 @@
         },
         "require-dev": {
             "phing/phing": "~2.7",
-            "phpunit/phpunit": "^4.8.35|^5.7|^6.0",
-            "sami/sami": "~2.0",
+            "phpunit/phpunit": "^4.8.35|^5.7|^6.0|^9.4",
             "squizlabs/php_codesniffer": "~2.0"
         },
         "suggest": {
@@ -68,7 +115,7 @@
             "ext-mcrypt": "Install the Mcrypt extension in order to speed up a few other cryptographic operations.",
             "ext-openssl": "Install the OpenSSL extension in order to speed up a wide variety of cryptographic operations."
         },
-        "time": "2020-04-04T23:17:33+00:00",
+        "time": "2021-04-06T13:56:45+00:00",
         "type": "library",
         "installation-source": "dist",
         "autoload": {
@@ -130,20 +177,6 @@
             "twofish",
             "x.509",
             "x509"
-        ],
-        "funding": [
-            {
-                "url": "https://github.com/terrafrost",
-                "type": "github"
-            },
-            {
-                "url": "https://www.patreon.com/phpseclib",
-                "type": "patreon"
-            },
-            {
-                "url": "https://tidelift.com/funding/github/packagist/phpseclib/phpseclib",
-                "type": "tidelift"
-            }
         ]
     }
 ]
