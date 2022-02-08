@@ -16,7 +16,8 @@ $snr=DB::get_list('SELECT DISTINCT snr FROM '.$tpref.'waehltsp');
 // Ausgabezeilen erzeugen
 foreach ($snr as $n) {
 	
-	$infos=DB::get_assoc('SELECT kuerzel,lstufe FROM '.$tpref."waehltsp WHERE snr='$n'".
+	$infos=DB::get_assoc('SELECT w.kuerzel,w.lstufe,s.oxs FROM '.$tpref.'schueler s JOIN '.
+        $tpref."waehltsp w ON s.snr=w.snr WHERE w.snr='$n'".
 		" AND kuerzel NOT IN ('ORC','JAZ','CHR','EX1','EX2','EX3','EX4','EXC')");
 	
 	$kurse=array();
@@ -25,7 +26,7 @@ foreach ($snr as $n) {
 	}
 	
 	// Erzeugen der Ausgabezeile
-	$arr = array($n,'','','SP','12','','','','','',implode('~',$kurse),'','');
+	$arr = array($data['oxs'],'','','SP','12','','','','','',implode('~',$kurse),'','');
 	for($i=0;$i<12;$i++){
 		echo "\"".$arr[$i]."\";";
 	}

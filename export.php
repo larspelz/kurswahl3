@@ -22,10 +22,11 @@
 	
 	if (isset($_GET['semno'])) $semno=$_GET['semno']; else $semno=1;
 	
-	$res=DB::get_assoc('SELECT snr,fachkurz FROM '.$tpref.'waehlt WHERE sem='.$semno." AND (NOT fachkurz='SP')");
+	#$res=DB::get_assoc('SELECT snr,fachkurz FROM '.$tpref.'waehlt WHERE sem='.$semno." AND (NOT fachkurz='SP')");
+    $res=DB::get_assoc('SELECT w.snr AS snr,fachkurz,klasse,oxs FROM '.$tpref.'waehlt w JOIN '.$tpref.'schueler s ON s.snr=w.snr WHERE sem='.$semno." AND (NOT fachkurz='SP')");
 	
 	// Jahrgang setzen
-	if ($semno<3) $jg=12; else $jg=13;
+	#if ($semno<3) $jg=12; else $jg=13;
 	
 	foreach ($res as $data) {
 	
@@ -33,14 +34,15 @@
 		$kursname=$data['fachkurz'];
 		$kursname='G'.$kursname;
 		
-		$arr = array($data['snr'],'',$kursname.'1',$data['fachkurz'],$jg,'',$data['snr'],'','','','','','');
+		$arr = array($data['oxs'],'',$kursname.'1',$data['fachkurz'],$data['klasse'],'',$data['snr'],'','','','','','');
 		echo arr2csv($arr);
 	}
 	// Prüfungsfächer exportieren, werden immer für 4 Semester gewählt und sind nicht in
 	// waehlt-Tabelle gespeichert
 	// TODO: auch bei Folgesemestern exportieren?
 	
-	$res=DB::get_assoc('SELECT snr,fachkurz,pf FROM '.$tpref.'waehltpf WHERE pf IN (1,2,3,4,7)');
+	#$res=DB::get_assoc('SELECT snr,fachkurz,pf FROM '.$tpref.'waehltpf WHERE pf IN (1,2,3,4,7)');
+    $res=DB::get_assoc('SELECT w.snr AS snr,fachkurz,klasse,oxs,pf FROM '.$tpref.'waehltpf w JOIN '.$tpref.'schueler s ON s.snr=w.snr WHERE pf IN (1,2,3,4,7)');
 	
 	foreach ($res as $data) {
 		$kursname='G'.$data['fachkurz'].'1';
@@ -48,7 +50,7 @@
 			if ($data['fachkurz']=='no') continue;
 			$kursname[0]='L';
 		}
-		$arr = array($data['snr'],'',$kursname,$data['fachkurz'],$jg,'',$data['snr'],'','','','','','');
+		$arr = array($data['oxs'],'',$kursname,$data['fachkurz'],$data['klasse'],'',$data['snr'],'','','','','','');
 		echo arr2csv($arr);
 	}
 

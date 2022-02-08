@@ -17,13 +17,13 @@
 	header('Content-type: text/ascii');
 	header('Content-Disposition: attachment; filename="pruefungsfaecher.sql"');
 	
-	$stud=DB::get_list ('SELECT snr FROM '.$tpref.'schueler');
+	$stud=DB::get_list ('SELECT DISTINCT oxs FROM '.$tpref."schueler WHERE klasse NOT LIKE '%Q%'");
 	
 	$pf=array();
 	for ($i=0;$i<count($stud);$i++) {
 		$pf[$stud[$i]]=array();
 		//echo $stud[$i].': ';
-		$infos=DB::get_assoc('SELECT fachkurz,pf FROM '.$tpref."waehltpf WHERE snr='$stud[$i]' ORDER BY pf");
+		$infos=DB::get_assoc('SELECT s.oxs AS snr,w.fachkurz,w.pf FROM '.$tpref.'waehltpf w JOIN '.$tpref."schueler s ON w.snr=s.snr WHERE s.oxs='$stud[$i]' ORDER BY pf");
 		foreach ($infos as $data) {
 			if (($data['pf']>=1 && $data['pf']<=5) || $data['pf']==7)
 				//echo ' -- '.$data['pf'].': '.$data['fachkurz'];
